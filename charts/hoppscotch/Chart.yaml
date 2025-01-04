@@ -1,0 +1,16 @@
+apiVersion: v1
+appVersion: 2024.12.0
+description: A free, fast and beautiful API request builder
+home: https://github.com/hoppscotch/hoppscotch
+maintainers:
+- email: klinux@gmail.com
+  name: Kleber Rocha
+name: hoppscotch
+sources:
+- https://github.com/hoppscotch/hoppscotch
+version: 0.4.0
+dependencies:
+- condition: postgresql.enabled
+  name: postgresql
+  repository: https://charts.bitnami.com/bitnami
+  version: 12.2.1
