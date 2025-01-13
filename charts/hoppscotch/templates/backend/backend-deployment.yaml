@@ -26,13 +26,32 @@ spec:
             - name: http
               containerPort: {{ .Values.backend.service.containerPort }}
               protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
+          {{- if .Values.backend.resources }}
           resources:
             {{- toYaml .Values.backend.resources | nindent 12 }}
+          {{- end }}
+          {{- if .Values.backend.readiness }}
+          readinessProbe:
+            {{- toYaml .Values.backend.readiness | nindent 12 }}
+          {{- end }}
+          {{- if .Values.backend.liveness }}
+          livenessProbe:
+            {{- toYaml .Values.backend.liveness | nindent 12 }}
+          {{- end }}
+          {{- if .Values.backend.customVolumeMount }}
+          volumeMounts:
+            {{- toYaml .Values.backend.customVolumeMount | nindent 12 }}
+          {{- end }}
+      {{- if .Values.backend.nodeSelector }}
+      nodeSelector: {{ toYaml .Values.backend.nodeSelector | nindent 8 }}
+      {{- end }}
+      {{- if .Values.backend.tolerations }}
+      tolerations: {{ toYaml .Values.backend.tolerations | nindent 8 }}
+      {{- end }}
+      {{- if .Values.backend.affinity }}
+      affinity: {{ toYaml .Values.backend.affinity | nindent 8 }}
+      {{- end }}
+      {{- if .Values.backend.customVolume }}
+      volumes:
+        {{- toYaml .Values.backend.customVolume | nindent 12 }}
+      {{- end }}

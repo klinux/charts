@@ -29,13 +29,32 @@ spec:
             - name: ws
               containerPort: {{ .Values.frontend.service.containerPort }}
               protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
+          {{- if .Values.frontend.resources }}
           resources:
             {{- toYaml .Values.frontend.resources | nindent 12 }}
+          {{- end }}
+          {{- if .Values.frontend.readiness }}
+          readinessProbe:
+            {{- toYaml .Values.frontend.readiness | nindent 12 }}
+          {{- end }}
+          {{- if .Values.frontend.liveness }}
+          livenessProbe:
+            {{- toYaml .Values.frontend.liveness | nindent 12 }}
+          {{- end }}
+          {{- if .Values.frontend.customVolumeMount }}
+          volumeMounts:
+            {{- toYaml .Values.frontend.customVolumeMount | nindent 12 }}
+          {{- end }}
+      {{- if .Values.frontend.nodeSelector }}
+      nodeSelector: {{ toYaml .Values.frontend.nodeSelector | nindent 8 }}
+      {{- end }}
+      {{- if .Values.frontend.tolerations }}
+      tolerations: {{ toYaml .Values.frontend.tolerations | nindent 8 }}
+      {{- end }}
+      {{- if .Values.frontend.affinity }}
+      affinity: {{ toYaml .Values.frontend.affinity | nindent 8 }}
+      {{- end }}
+      {{- if .Values.frontend.customVolume }}
+      volumes:
+        {{- toYaml .Values.frontend.customVolume | nindent 12 }}
+      {{- end }}

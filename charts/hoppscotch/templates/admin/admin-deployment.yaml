@@ -26,13 +26,32 @@ spec:
             - name: http
               containerPort: 3100
               protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
+          {{- if .Values.admin.resources }}
           resources:
             {{- toYaml .Values.admin.resources | nindent 12 }}
+          {{- end }}
+          {{- if .Values.admin.readiness }}
+          readinessProbe:
+            {{- toYaml .Values.admin.readiness | nindent 12 }}
+          {{- end }}
+          {{- if .Values.admin.liveness }}
+          livenessProbe:
+            {{- toYaml .Values.admin.liveness | nindent 12 }}
+          {{- end }}
+          {{- if .Values.admin.customVolumeMount }}
+          volumeMounts:
+            {{- toYaml .Values.admin.customVolumeMount | nindent 12 }}
+          {{- end }}
+      {{- if .Values.admin.nodeSelector }}
+      nodeSelector: {{ toYaml .Values.admin.nodeSelector | nindent 8 }}
+      {{- end }}
+      {{- if .Values.admin.tolerations }}
+      tolerations: {{ toYaml .Values.admin.tolerations | nindent 8 }}
+      {{- end }}
+      {{- if .Values.admin.affinity }}
+      affinity: {{ toYaml .Values.admin.affinity | nindent 8 }}
+      {{- end }}
+      {{- if .Values.admin.customVolume }}
+      volumes:
+        {{- toYaml .Values.admin.customVolume | nindent 12 }}
+      {{- end }}

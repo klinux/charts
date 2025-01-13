@@ -1,156 +1,3633 @@
 {
-  "$schema": "http://json-schema.org/schema#",
-  "type": "object",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "additionalProperties": false,
   "properties": {
     "architecture": {
-      "type": "string",
-      "title": "PostgreSQL architecture",
-      "form": true,
-      "description": "Allowed values: `standalone` or `replication`"
+      "default": "standalone",
+      "description": "#\n#",
+      "required": [],
+      "title": "architecture",
+      "type": "string"
+    },
+    "audit": {
+      "additionalProperties": false,
+      "description": "# Audit settings\n# https://github.com/bitnami/containers/tree/main/bitnami/postgresql#auditing\n#\n#\n#\n#\n#\n#\n#\n#\n#",
+      "properties": {
+        "clientMinMessages": {
+          "default": "error",
+          "required": [],
+          "title": "clientMinMessages",
+          "type": "string"
+        },
+        "logConnections": {
+          "default": false,
+          "required": [],
+          "title": "logConnections",
+          "type": "boolean"
+        },
+        "logDisconnections": {
+          "default": false,
+          "required": [],
+          "title": "logDisconnections",
+          "type": "boolean"
+        },
+        "logHostname": {
+          "default": false,
+          "required": [],
+          "title": "logHostname",
+          "type": "boolean"
+        },
+        "logLinePrefix": {
+          "default": "",
+          "required": [],
+          "title": "logLinePrefix",
+          "type": "string"
+        },
+        "logTimezone": {
+          "default": "",
+          "required": [],
+          "title": "logTimezone",
+          "type": "string"
+        },
+        "pgAuditLog": {
+          "default": "",
+          "required": [],
+          "title": "pgAuditLog",
+          "type": "string"
+        },
+        "pgAuditLogCatalog": {
+          "default": "off",
+          "required": [],
+          "title": "pgAuditLogCatalog",
+          "type": "string"
+        }
+      },
+      "required": [
+        "logHostname",
+        "logConnections",
+        "logDisconnections",
+        "pgAuditLog",
+        "pgAuditLogCatalog",
+        "clientMinMessages",
+        "logLinePrefix",
+        "logTimezone"
+      ],
+      "title": "audit",
+      "type": "object"
     },
     "auth": {
-      "type": "object",
-      "title": "Authentication configuration",
-      "form": true,
+      "additionalProperties": false,
+      "description": "# Authentication parameters\n# ref: https://github.com/bitnami/containers/tree/main/bitnami/postgresql#setting-the-root-password-on-first-run\n# ref: https://github.com/bitnami/containers/tree/main/bitnami/postgresql#creating-a-database-on-first-run\n# ref: https://github.com/bitnami/containers/tree/main/bitnami/postgresql#creating-a-database-user-on-first-run\n#",
       "properties": {
-        "enablePostgresUser": {
-          "type": "boolean",
-          "title": "Enable \"postgres\" admin user",
-          "description": "Assign a password to the \"postgres\" admin user. Otherwise, remote access will be blocked for this user",
-          "form": true
-        },
-        "postgresPassword": {
-          "type": "string",
-          "title": "Password for the \"postgres\" admin user",
-          "description": "Defaults to a random 10-character alphanumeric string if not set",
-          "form": true
-        },
         "database": {
-          "type": "string",
-          "title": "PostgreSQL custom database",
-          "description": "Name of the custom database to be created during the 1st initialization of PostgreSQL",
-          "form": true
+          "default": "",
+          "description": "#\n#",
+          "required": [],
+          "title": "database",
+          "type": "string"
         },
-        "username": {
-          "type": "string",
-          "title": "PostgreSQL custom user",
-          "description": "Name of the custom user to be created during the 1st initialization of PostgreSQL. This user only has permissions on the PostgreSQL custom database",
-          "form": true
+        "enablePostgresUser": {
+          "default": true,
+          "description": "#\n#",
+          "required": [],
+          "title": "enablePostgresUser",
+          "type": "boolean"
+        },
+        "existingSecret": {
+          "default": "",
+          "description": "#\n#",
+          "required": [],
+          "title": "existingSecret",
+          "type": "string"
         },
         "password": {
-          "type": "string",
-          "title": "Password for the custom user to create",
-          "description": "Defaults to a random 10-character alphanumeric string if not set",
-          "form": true
+          "default": "",
+          "description": "#\n#",
+          "required": [],
+          "title": "password",
+          "type": "string"
         },
-        "replicationUsername": {
-          "type": "string",
-          "title": "PostgreSQL replication user",
-          "description": "Name of user used to manage replication.",
-          "form": true,
-          "hidden": {
-            "value": "standalone",
-            "path": "architecture"
-          }
+        "postgresPassword": {
+          "default": "",
+          "description": "#\n#",
+          "required": [],
+          "title": "postgresPassword",
+          "type": "string"
         },
         "replicationPassword": {
-          "type": "string",
-          "title": "Password for PostgreSQL replication user",
-          "description": "Defaults to a random 10-character alphanumeric string if not set",
-          "form": true,
-          "hidden": {
-            "value": "standalone",
-            "path": "architecture"
-          }
-        }
-      }
-    },
-    "persistence": {
-      "type": "object",
-      "properties": {
-        "size": {
-          "type": "string",
-          "title": "Persistent Volume Size",
-          "form": true,
-          "render": "slider",
-          "sliderMin": 1,
-          "sliderMax": 100,
-          "sliderUnit": "Gi"
-        }
-      }
-    },
-    "resources": {
-      "type": "object",
-      "title": "Required Resources",
-      "description": "Configure resource requests",
-      "form": true,
-      "properties": {
-        "requests": {
-          "type": "object",
-          "properties": {
-            "memory": {
-              "type": "string",
-              "form": true,
-              "render": "slider",
-              "title": "Memory Request",
-              "sliderMin": 10,
-              "sliderMax": 2048,
-              "sliderUnit": "Mi"
-            },
-            "cpu": {
-              "type": "string",
-              "form": true,
-              "render": "slider",
-              "title": "CPU Request",
-              "sliderMin": 10,
-              "sliderMax": 2000,
-              "sliderUnit": "m"
-            }
-          }
-        }
-      }
-    },
-    "replication": {
-      "type": "object",
-      "form": true,
-      "title": "Replication Details",
-      "properties": {
-        "enabled": {
-          "type": "boolean",
-          "title": "Enable Replication",
-          "form": true
+          "default": "",
+          "description": "#\n#",
+          "required": [],
+          "title": "replicationPassword",
+          "type": "string"
         },
-        "readReplicas": {
-          "type": "integer",
-          "title": "read Replicas",
-          "form": true,
-          "hidden": {
-            "value": "standalone",
-            "path": "architecture"
-          }
+        "replicationUsername": {
+          "default": "repl_user",
+          "description": "#\n#",
+          "required": [],
+          "title": "replicationUsername",
+          "type": "string"
+        },
+        "secretKeys": {
+          "additionalProperties": false,
+          "description": "#\n#\n#\n#",
+          "properties": {
+            "adminPasswordKey": {
+              "default": "postgres-password",
+              "required": [],
+              "title": "adminPasswordKey",
+              "type": "string"
+            },
+            "replicationPasswordKey": {
+              "default": "replication-password",
+              "required": [],
+              "title": "replicationPasswordKey",
+              "type": "string"
+            },
+            "userPasswordKey": {
+              "default": "password",
+              "required": [],
+              "title": "userPasswordKey",
+              "type": "string"
+            }
+          },
+          "required": [
+            "adminPasswordKey",
+            "userPasswordKey",
+            "replicationPasswordKey"
+          ],
+          "title": "secretKeys",
+          "type": "object"
+        },
+        "usePasswordFiles": {
+          "default": false,
+          "description": "#\n#",
+          "required": [],
+          "title": "usePasswordFiles",
+          "type": "boolean"
+        },
+        "username": {
+          "default": "",
+          "description": "#\n#",
+          "required": [],
+          "title": "username",
+          "type": "string"
         }
-      }
+      },
+      "required": [
+        "enablePostgresUser",
+        "postgresPassword",
+        "username",
+        "password",
+        "database",
+        "replicationUsername",
+        "replicationPassword",
+        "existingSecret",
+        "secretKeys",
+        "usePasswordFiles"
+      ],
+      "title": "auth",
+      "type": "object"
     },
-    "volumePermissions": {
-      "type": "object",
+    "clusterDomain": {
+      "default": "cluster.local",
+      "description": "#\n#",
+      "required": [],
+      "title": "clusterDomain",
+      "type": "string"
+    },
+    "common": {
+      "description": "A Library Helm Chart for grouping common logic between bitnami charts. This chart is not deployable by itself.",
       "properties": {
-        "enabled": {
-          "type": "boolean",
-          "form": true,
-          "title": "Enable Init Containers",
-          "description": "Change the owner of the persist volume mountpoint to RunAsUser:fsGroup"
+        "exampleValue": {
+          "default": "common-chart",
+          "description": "# bitnami/common\n# It is required by CI/CD tools and processes.\n#\n#",
+          "required": [],
+          "title": "exampleValue",
+          "type": "string"
+        },
+        "global": {
+          "description": "Global values are values that can be accessed from any chart or subchart by exactly the same name.",
+          "required": [],
+          "title": "global",
+          "type": "object"
         }
-      }
+      },
+      "required": [],
+      "title": "common",
+      "type": "object"
+    },
+    "commonAnnotations": {
+      "additionalProperties": false,
+      "description": "#\n#",
+      "required": [],
+      "title": "commonAnnotations",
+      "type": "object"
+    },
+    "commonLabels": {
+      "additionalProperties": false,
+      "description": "#\n#",
+      "required": [],
+      "title": "commonLabels",
+      "type": "object"
+    },
+    "containerPorts": {
+      "additionalProperties": false,
+      "description": "#\n#",
+      "properties": {
+        "postgresql": {
+          "default": 5432,
+          "required": [],
+          "title": "postgresql",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "postgresql"
+      ],
+      "title": "containerPorts",
+      "type": "object"
+    },
+    "diagnosticMode": {
+      "additionalProperties": false,
+      "description": "# Enable diagnostic mode in the statefulset\n#",
+      "properties": {
+        "args": {
+          "description": "#\n#",
+          "items": {
+            "anyOf": [
+              {
+                "required": [],
+                "type": "string"
+              }
+            ],
+            "required": []
+          },
+          "required": [],
+          "title": "args",
+          "type": "array"
+        },
+        "command": {
+          "description": "#\n#",
+          "items": {
+            "anyOf": [
+              {
+                "required": [],
+                "type": "string"
+              }
+            ],
+            "required": []
+          },
+          "required": [],
+          "title": "command",
+          "type": "array"
+        },
+        "enabled": {
+          "default": false,
+          "description": "#\n#",
+          "required": [],
+          "title": "enabled",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "enabled",
+        "command",
+        "args"
+      ],
+      "title": "diagnosticMode",
+      "type": "object"
+    },
+    "enabled": {
+      "description": "Conditional property used in parent chart",
+      "required": [],
+      "title": "enabled",
+      "type": "boolean"
+    },
+    "extraDeploy": {
+      "description": "#\n#",
+      "items": {
+        "required": []
+      },
+      "required": [],
+      "title": "extraDeploy",
+      "type": "array"
+    },
+    "fullnameOverride": {
+      "default": "",
+      "description": "#\n#",
+      "required": [],
+      "title": "fullnameOverride",
+      "type": "string"
+    },
+    "global": {
+      "additionalProperties": false,
+      "description": "#\n# Please, note that this will override the parameters, including dependencies, configured to use the global value\n#",
+      "properties": {
+        "imagePullSecrets": {
+          "description": "#\n# e.g.\n# imagePullSecrets:\n#   - myRegistryKeySecretName\n#",
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "imagePullSecrets",
+          "type": "array"
+        },
+        "imageRegistry": {
+          "default": "",
+          "description": "#\n#",
+          "required": [],
+          "title": "imageRegistry",
+          "type": "string"
+        },
+        "postgresql": {
+          "additionalProperties": false,
+          "properties": {
+            "auth": {
+              "additionalProperties": false,
+              "description": "#\n#\n#\n#\n#\n#\n#\n#\n#",
+              "properties": {
+                "database": {
+                  "default": "",
+                  "required": [],
+                  "title": "database",
+                  "type": "string"
+                },
+                "existingSecret": {
+                  "default": "",
+                  "required": [],
+                  "title": "existingSecret",
+                  "type": "string"
+                },
+                "password": {
+                  "default": "",
+                  "required": [],
+                  "title": "password",
+                  "type": "string"
+                },
+                "postgresPassword": {
+                  "default": "",
+                  "required": [],
+                  "title": "postgresPassword",
+                  "type": "string"
+                },
+                "secretKeys": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "adminPasswordKey": {
+                      "default": "",
+                      "required": [],
+                      "title": "adminPasswordKey",
+                      "type": "string"
+                    },
+                    "replicationPasswordKey": {
+                      "default": "",
+                      "required": [],
+                      "title": "replicationPasswordKey",
+                      "type": "string"
+                    },
+                    "userPasswordKey": {
+                      "default": "",
+                      "required": [],
+                      "title": "userPasswordKey",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "adminPasswordKey",
+                    "userPasswordKey",
+                    "replicationPasswordKey"
+                  ],
+                  "title": "secretKeys",
+                  "type": "object"
+                },
+                "username": {
+                  "default": "",
+                  "required": [],
+                  "title": "username",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "postgresPassword",
+                "username",
+                "password",
+                "database",
+                "existingSecret",
+                "secretKeys"
+              ],
+              "title": "auth",
+              "type": "object"
+            },
+            "service": {
+              "additionalProperties": false,
+              "description": "#\n#",
+              "properties": {
+                "ports": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "postgresql": {
+                      "default": "",
+                      "required": [],
+                      "title": "postgresql",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "postgresql"
+                  ],
+                  "title": "ports",
+                  "type": "object"
+                }
+              },
+              "required": [
+                "ports"
+              ],
+              "title": "service",
+              "type": "object"
+            }
+          },
+          "required": [
+            "auth",
+            "service"
+          ],
+          "title": "postgresql",
+          "type": "object"
+        },
+        "storageClass": {
+          "default": "",
+          "description": "#\n#",
+          "required": [],
+          "title": "storageClass",
+          "type": "string"
+        }
+      },
+      "required": [
+        "imageRegistry",
+        "imagePullSecrets",
+        "storageClass",
+        "postgresql"
+      ],
+      "title": "global",
+      "type": "object"
+    },
+    "image": {
+      "additionalProperties": false,
+      "description": "# Bitnami PostgreSQL image version\n# ref: https://hub.docker.com/r/bitnami/postgresql/tags/\n#\n#\n#\n#\n#\n#\n#\n#",
+      "properties": {
+        "debug": {
+          "default": false,
+          "description": "# Set to true if you would like to see extra information on logs\n#",
+          "required": [],
+          "title": "debug",
+          "type": "boolean"
+        },
+        "digest": {
+          "default": "",
+          "required": [],
+          "title": "digest",
+          "type": "string"
+        },
+        "pullPolicy": {
+          "default": "IfNotPresent",
+          "description": "# Specify a imagePullPolicy\n# Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'\n# ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images\n#",
+          "required": [],
+          "title": "pullPolicy",
+          "type": "string"
+        },
+        "pullSecrets": {
+          "description": "# Optionally specify an array of imagePullSecrets.\n# Secrets must be manually created in the namespace.\n# ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/\n# Example:\n# pullSecrets:\n#   - myRegistryKeySecretName\n#",
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "pullSecrets",
+          "type": "array"
+        },
+        "registry": {
+          "default": "docker.io",
+          "required": [],
+          "title": "registry",
+          "type": "string"
+        },
+        "repository": {
+          "default": "bitnami/postgresql",
+          "required": [],
+          "title": "repository",
+          "type": "string"
+        },
+        "tag": {
+          "default": "15.2.0-debian-11-r2",
+          "required": [],
+          "title": "tag",
+          "type": "string"
+        }
+      },
+      "required": [
+        "registry",
+        "repository",
+        "tag",
+        "digest",
+        "pullPolicy",
+        "pullSecrets",
+        "debug"
+      ],
+      "title": "image",
+      "type": "object"
+    },
+    "kubeVersion": {
+      "default": "",
+      "description": "#\n#",
+      "required": [],
+      "title": "kubeVersion",
+      "type": "string"
+    },
+    "ldap": {
+      "additionalProperties": false,
+      "description": "# LDAP configuration\n#\n# DEPRECATED ldap.url It will removed in a future, please use 'ldap.uri' instead\n#\n#\n#\n#\n# DEPRECATED ldap.baseDN It will removed in a future, please use 'ldap.basedn' instead\n# DEPRECATED ldap.bindDN It will removed in a future, please use 'ldap.binddn' instead\n# DEPRECATED ldap.bind_password It will removed in a future, please use 'ldap.bindpw' instead\n#\n#\n#\n# DEPRECATED ldap.search_attr It will removed in a future, please use 'ldap.searchAttribute' instead\n# DEPRECATED ldap.search_filter It will removed in a future, please use 'ldap.searchFilter' instead\n#\n#\n#\n# DEPRECATED ldap.tls as string is deprecated，please use 'ldap.tls.enabled' instead\n#\n#",
+      "properties": {
+        "basedn": {
+          "default": "",
+          "required": [],
+          "title": "basedn",
+          "type": "string"
+        },
+        "binddn": {
+          "default": "",
+          "required": [],
+          "title": "binddn",
+          "type": "string"
+        },
+        "bindpw": {
+          "default": "",
+          "required": [],
+          "title": "bindpw",
+          "type": "string"
+        },
+        "enabled": {
+          "default": false,
+          "required": [],
+          "title": "enabled",
+          "type": "boolean"
+        },
+        "port": {
+          "default": "",
+          "required": [],
+          "title": "port",
+          "type": "string"
+        },
+        "prefix": {
+          "default": "",
+          "required": [],
+          "title": "prefix",
+          "type": "string"
+        },
+        "scheme": {
+          "default": "",
+          "required": [],
+          "title": "scheme",
+          "type": "string"
+        },
+        "searchAttribute": {
+          "default": "",
+          "required": [],
+          "title": "searchAttribute",
+          "type": "string"
+        },
+        "searchFilter": {
+          "default": "",
+          "required": [],
+          "title": "searchFilter",
+          "type": "string"
+        },
+        "server": {
+          "default": "",
+          "required": [],
+          "title": "server",
+          "type": "string"
+        },
+        "suffix": {
+          "default": "",
+          "required": [],
+          "title": "suffix",
+          "type": "string"
+        },
+        "tls": {
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "default": false,
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "enabled"
+          ],
+          "title": "tls",
+          "type": "object"
+        },
+        "uri": {
+          "default": "",
+          "description": "#\n# Ref: https://www.postgresql.org/docs/current/auth-ldap.html\n#",
+          "required": [],
+          "title": "uri",
+          "type": "string"
+        }
+      },
+      "required": [
+        "enabled",
+        "server",
+        "port",
+        "prefix",
+        "suffix",
+        "basedn",
+        "binddn",
+        "bindpw",
+        "searchAttribute",
+        "searchFilter",
+        "scheme",
+        "tls",
+        "uri"
+      ],
+      "title": "ldap",
+      "type": "object"
     },
     "metrics": {
-      "type": "object",
+      "additionalProperties": false,
+      "description": "#\n#",
+      "properties": {
+        "containerPorts": {
+          "additionalProperties": false,
+          "description": "#\n#",
+          "properties": {
+            "metrics": {
+              "default": 9187,
+              "required": [],
+              "title": "metrics",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "metrics"
+          ],
+          "title": "containerPorts",
+          "type": "object"
+        },
+        "containerSecurityContext": {
+          "additionalProperties": false,
+          "description": "# PostgreSQL Prometheus exporter containers' Security Context\n# ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container\n#\n#\n#\n#",
+          "properties": {
+            "enabled": {
+              "default": true,
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "runAsNonRoot": {
+              "default": true,
+              "required": [],
+              "title": "runAsNonRoot",
+              "type": "boolean"
+            },
+            "runAsUser": {
+              "default": 1001,
+              "required": [],
+              "title": "runAsUser",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "enabled",
+            "runAsUser",
+            "runAsNonRoot"
+          ],
+          "title": "containerSecurityContext",
+          "type": "object"
+        },
+        "customLivenessProbe": {
+          "additionalProperties": false,
+          "description": "#\n#",
+          "required": [],
+          "title": "customLivenessProbe",
+          "type": "object"
+        },
+        "customMetrics": {
+          "additionalProperties": false,
+          "description": "#\n# ref: https://github.com/wrouesnel/postgres_exporter#adding-new-metrics-via-a-config-file\n# customMetrics:\n#   pg_database:\n#     query: \"SELECT d.datname AS name, CASE WHEN pg_catalog.has_database_privilege(d.datname, 'CONNECT') THEN pg_catalog.pg_database_size(d.datname) ELSE 0 END AS size_bytes FROM pg_catalog.pg_database d where datname not in ('template0', 'template1', 'postgres')\"\n#     metrics:\n#       - name:\n#           usage: \"LABEL\"\n#           description: \"Name of the database\"\n#       - size_bytes:\n#           usage: \"GAUGE\"\n#           description: \"Size of the database in bytes\"\n#",
+          "required": [],
+          "title": "customMetrics",
+          "type": "object"
+        },
+        "customReadinessProbe": {
+          "additionalProperties": false,
+          "description": "#\n#",
+          "required": [],
+          "title": "customReadinessProbe",
+          "type": "object"
+        },
+        "customStartupProbe": {
+          "additionalProperties": false,
+          "description": "#\n#",
+          "required": [],
+          "title": "customStartupProbe",
+          "type": "object"
+        },
+        "enabled": {
+          "default": false,
+          "description": "#\n#",
+          "required": [],
+          "title": "enabled",
+          "type": "boolean"
+        },
+        "extraEnvVars": {
+          "description": "#\n# see: https://github.com/wrouesnel/postgres_exporter#environment-variables\n# For example:\n#  extraEnvVars:\n#  - name: PG_EXPORTER_DISABLE_DEFAULT_METRICS\n#    value: \"true\"\n#",
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "extraEnvVars",
+          "type": "array"
+        },
+        "image": {
+          "additionalProperties": false,
+          "description": "#\n#\n#\n#\n#\n#\n#",
+          "properties": {
+            "digest": {
+              "default": "",
+              "required": [],
+              "title": "digest",
+              "type": "string"
+            },
+            "pullPolicy": {
+              "default": "IfNotPresent",
+              "required": [],
+              "title": "pullPolicy",
+              "type": "string"
+            },
+            "pullSecrets": {
+              "description": "# Optionally specify an array of imagePullSecrets.\n# Secrets must be manually created in the namespace.\n# ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/\n# Example:\n# pullSecrets:\n#   - myRegistryKeySecretName\n#",
+              "items": {
+                "required": []
+              },
+              "required": [],
+              "title": "pullSecrets",
+              "type": "array"
+            },
+            "registry": {
+              "default": "docker.io",
+              "required": [],
+              "title": "registry",
+              "type": "string"
+            },
+            "repository": {
+              "default": "bitnami/postgres-exporter",
+              "required": [],
+              "title": "repository",
+              "type": "string"
+            },
+            "tag": {
+              "default": "0.11.1-debian-11-r60",
+              "required": [],
+              "title": "tag",
+              "type": "string"
+            }
+          },
+          "required": [
+            "registry",
+            "repository",
+            "tag",
+            "digest",
+            "pullPolicy",
+            "pullSecrets"
+          ],
+          "title": "image",
+          "type": "object"
+        },
+        "livenessProbe": {
+          "additionalProperties": false,
+          "description": "# Configure extra options for PostgreSQL Prometheus exporter containers' liveness, readiness and startup probes\n# ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes\n#\n#\n#\n#\n#\n#\n#",
+          "properties": {
+            "enabled": {
+              "default": true,
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "failureThreshold": {
+              "default": 6,
+              "required": [],
+              "title": "failureThreshold",
+              "type": "integer"
+            },
+            "initialDelaySeconds": {
+              "default": 5,
+              "required": [],
+              "title": "initialDelaySeconds",
+              "type": "integer"
+            },
+            "periodSeconds": {
+              "default": 10,
+              "required": [],
+              "title": "periodSeconds",
+              "type": "integer"
+            },
+            "successThreshold": {
+              "default": 1,
+              "required": [],
+              "title": "successThreshold",
+              "type": "integer"
+            },
+            "timeoutSeconds": {
+              "default": 5,
+              "required": [],
+              "title": "timeoutSeconds",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "enabled",
+            "initialDelaySeconds",
+            "periodSeconds",
+            "timeoutSeconds",
+            "failureThreshold",
+            "successThreshold"
+          ],
+          "title": "livenessProbe",
+          "type": "object"
+        },
+        "prometheusRule": {
+          "additionalProperties": false,
+          "description": "# Custom PrometheusRule to be defined\n# The value is evaluated as a template, so, for example, the value can depend on .Release or .Chart\n# ref: https://github.com/coreos/prometheus-operator#customresourcedefinitions\n#",
+          "properties": {
+            "enabled": {
+              "default": false,
+              "description": "#\n#",
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "labels": {
+              "additionalProperties": false,
+              "description": "#\n#",
+              "required": [],
+              "title": "labels",
+              "type": "object"
+            },
+            "namespace": {
+              "default": "",
+              "description": "#\n#",
+              "required": [],
+              "title": "namespace",
+              "type": "string"
+            },
+            "rules": {
+              "description": "#\n# Make sure to constraint the rules to the current postgresql service.\n# rules:\n#   - alert: HugeReplicationLag\n#     expr: pg_replication_lag{service=\"{{ printf \"%s-metrics\" (include \"common.names.fullname\" .) }}\"} / 3600 \u003e 1\n#     for: 1m\n#     labels:\n#       severity: critical\n#     annotations:\n#       description: replication for {{ include \"common.names.fullname\" . }} PostgreSQL is lagging by {{ \"{{ $value }}\" }} hour(s).\n#       summary: PostgreSQL replication is lagging by {{ \"{{ $value }}\" }} hour(s).\n#",
+              "items": {
+                "required": []
+              },
+              "required": [],
+              "title": "rules",
+              "type": "array"
+            }
+          },
+          "required": [
+            "enabled",
+            "namespace",
+            "labels",
+            "rules"
+          ],
+          "title": "prometheusRule",
+          "type": "object"
+        },
+        "readinessProbe": {
+          "additionalProperties": false,
+          "description": "#\n#\n#\n#\n#\n#\n#",
+          "properties": {
+            "enabled": {
+              "default": true,
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "failureThreshold": {
+              "default": 6,
+              "required": [],
+              "title": "failureThreshold",
+              "type": "integer"
+            },
+            "initialDelaySeconds": {
+              "default": 5,
+              "required": [],
+              "title": "initialDelaySeconds",
+              "type": "integer"
+            },
+            "periodSeconds": {
+              "default": 10,
+              "required": [],
+              "title": "periodSeconds",
+              "type": "integer"
+            },
+            "successThreshold": {
+              "default": 1,
+              "required": [],
+              "title": "successThreshold",
+              "type": "integer"
+            },
+            "timeoutSeconds": {
+              "default": 5,
+              "required": [],
+              "title": "timeoutSeconds",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "enabled",
+            "initialDelaySeconds",
+            "periodSeconds",
+            "timeoutSeconds",
+            "failureThreshold",
+            "successThreshold"
+          ],
+          "title": "readinessProbe",
+          "type": "object"
+        },
+        "resources": {
+          "additionalProperties": false,
+          "description": "# PostgreSQL Prometheus exporter resource requests and limits\n# ref: https://kubernetes.io/docs/user-guide/compute-resources/\n#\n#\n#",
+          "properties": {
+            "limits": {
+              "additionalProperties": false,
+              "required": [],
+              "title": "limits",
+              "type": "object"
+            },
+            "requests": {
+              "additionalProperties": false,
+              "required": [],
+              "title": "requests",
+              "type": "object"
+            }
+          },
+          "required": [
+            "limits",
+            "requests"
+          ],
+          "title": "resources",
+          "type": "object"
+        },
+        "service": {
+          "additionalProperties": false,
+          "description": "# Service configuration\n#",
+          "properties": {
+            "annotations": {
+              "additionalProperties": false,
+              "description": "#\n#",
+              "properties": {
+                "prometheus.io/port": {
+                  "default": "{{ .Values.metrics.service.ports.metrics }}",
+                  "required": [],
+                  "title": "prometheus.io/port",
+                  "type": "string"
+                },
+                "prometheus.io/scrape": {
+                  "default": "true",
+                  "required": [],
+                  "title": "prometheus.io/scrape",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "prometheus.io/scrape",
+                "prometheus.io/port"
+              ],
+              "title": "annotations",
+              "type": "object"
+            },
+            "clusterIP": {
+              "default": "",
+              "description": "#\n# ref: https://kubernetes.io/docs/concepts/services-networking/service/#choosing-your-own-ip-address\n#",
+              "required": [],
+              "title": "clusterIP",
+              "type": "string"
+            },
+            "ports": {
+              "additionalProperties": false,
+              "description": "#\n#",
+              "properties": {
+                "metrics": {
+                  "default": 9187,
+                  "required": [],
+                  "title": "metrics",
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "metrics"
+              ],
+              "title": "ports",
+              "type": "object"
+            },
+            "sessionAffinity": {
+              "default": "None",
+              "description": "#\n# Values: ClientIP or None\n# ref: https://kubernetes.io/docs/user-guide/services/\n#",
+              "required": [],
+              "title": "sessionAffinity",
+              "type": "string"
+            }
+          },
+          "required": [
+            "ports",
+            "clusterIP",
+            "sessionAffinity",
+            "annotations"
+          ],
+          "title": "service",
+          "type": "object"
+        },
+        "serviceMonitor": {
+          "additionalProperties": false,
+          "description": "# Prometheus Operator ServiceMonitor configuration\n#",
+          "properties": {
+            "enabled": {
+              "default": false,
+              "description": "#\n#",
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "honorLabels": {
+              "default": false,
+              "description": "#\n#",
+              "required": [],
+              "title": "honorLabels",
+              "type": "boolean"
+            },
+            "interval": {
+              "default": "",
+              "description": "#\n# ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#endpoint\n#",
+              "required": [],
+              "title": "interval",
+              "type": "string"
+            },
+            "jobLabel": {
+              "default": "",
+              "description": "#\n#",
+              "required": [],
+              "title": "jobLabel",
+              "type": "string"
+            },
+            "labels": {
+              "additionalProperties": false,
+              "description": "#\n#",
+              "required": [],
+              "title": "labels",
+              "type": "object"
+            },
+            "metricRelabelings": {
+              "description": "#\n#",
+              "items": {
+                "required": []
+              },
+              "required": [],
+              "title": "metricRelabelings",
+              "type": "array"
+            },
+            "namespace": {
+              "default": "",
+              "description": "#\n#",
+              "required": [],
+              "title": "namespace",
+              "type": "string"
+            },
+            "relabelings": {
+              "description": "#\n#",
+              "items": {
+                "required": []
+              },
+              "required": [],
+              "title": "relabelings",
+              "type": "array"
+            },
+            "scrapeTimeout": {
+              "default": "",
+              "description": "#\n# ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#endpoint\n#",
+              "required": [],
+              "title": "scrapeTimeout",
+              "type": "string"
+            },
+            "selector": {
+              "additionalProperties": false,
+              "description": "#\n# ref: https://github.com/bitnami/charts/tree/main/bitnami/prometheus-operator#prometheus-configuration\n#",
+              "required": [],
+              "title": "selector",
+              "type": "object"
+            }
+          },
+          "required": [
+            "enabled",
+            "namespace",
+            "interval",
+            "scrapeTimeout",
+            "labels",
+            "selector",
+            "relabelings",
+            "metricRelabelings",
+            "honorLabels",
+            "jobLabel"
+          ],
+          "title": "serviceMonitor",
+          "type": "object"
+        },
+        "startupProbe": {
+          "additionalProperties": false,
+          "description": "#\n#\n#\n#\n#\n#\n#",
+          "properties": {
+            "enabled": {
+              "default": false,
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "failureThreshold": {
+              "default": 15,
+              "required": [],
+              "title": "failureThreshold",
+              "type": "integer"
+            },
+            "initialDelaySeconds": {
+              "default": 10,
+              "required": [],
+              "title": "initialDelaySeconds",
+              "type": "integer"
+            },
+            "periodSeconds": {
+              "default": 10,
+              "required": [],
+              "title": "periodSeconds",
+              "type": "integer"
+            },
+            "successThreshold": {
+              "default": 1,
+              "required": [],
+              "title": "successThreshold",
+              "type": "integer"
+            },
+            "timeoutSeconds": {
+              "default": 1,
+              "required": [],
+              "title": "timeoutSeconds",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "enabled",
+            "initialDelaySeconds",
+            "periodSeconds",
+            "timeoutSeconds",
+            "failureThreshold",
+            "successThreshold"
+          ],
+          "title": "startupProbe",
+          "type": "object"
+        }
+      },
+      "required": [
+        "enabled",
+        "image",
+        "customMetrics",
+        "extraEnvVars",
+        "containerSecurityContext",
+        "livenessProbe",
+        "readinessProbe",
+        "startupProbe",
+        "customLivenessProbe",
+        "customReadinessProbe",
+        "customStartupProbe",
+        "containerPorts",
+        "resources",
+        "service",
+        "serviceMonitor",
+        "prometheusRule"
+      ],
+      "title": "metrics",
+      "type": "object"
+    },
+    "nameOverride": {
+      "default": "",
+      "description": "#\n#",
+      "required": [],
+      "title": "nameOverride",
+      "type": "string"
+    },
+    "networkPolicy": {
+      "additionalProperties": false,
+      "description": "# Add networkpolicies\n#",
+      "properties": {
+        "egressRules": {
+          "additionalProperties": false,
+          "description": "#\n#\n#",
+          "properties": {
+            "customRules": {
+              "additionalProperties": false,
+              "description": "# Additional custom egress rules\n# e.g:\n# customRules:\n#   - to:\n#       - namespaceSelector:\n#           matchLabels:\n#             label: example\n#",
+              "required": [],
+              "title": "customRules",
+              "type": "object"
+            },
+            "denyConnectionsToExternal": {
+              "default": false,
+              "description": "Deny connections to external. This is not compatible with an external database.",
+              "required": [],
+              "title": "denyConnectionsToExternal",
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "denyConnectionsToExternal",
+            "customRules"
+          ],
+          "title": "egressRules",
+          "type": "object"
+        },
+        "enabled": {
+          "default": false,
+          "description": "#\n#",
+          "required": [],
+          "title": "enabled",
+          "type": "boolean"
+        },
+        "ingressRules": {
+          "additionalProperties": false,
+          "description": "# Ingress Rules\n#",
+          "properties": {
+            "primaryAccessOnlyFrom": {
+              "additionalProperties": false,
+              "description": "#\n#\n#\n#\n#",
+              "properties": {
+                "customRules": {
+                  "additionalProperties": false,
+                  "description": "# custom ingress rules\n# e.g:\n# customRules:\n#   - from:\n#       - namespaceSelector:\n#           matchLabels:\n#             label: example\n#",
+                  "required": [],
+                  "title": "customRules",
+                  "type": "object"
+                },
+                "enabled": {
+                  "default": false,
+                  "required": [],
+                  "title": "enabled",
+                  "type": "boolean"
+                },
+                "namespaceSelector": {
+                  "additionalProperties": false,
+                  "description": "# e.g:\n# namespaceSelector:\n#   label: ingress\n#",
+                  "required": [],
+                  "title": "namespaceSelector",
+                  "type": "object"
+                },
+                "podSelector": {
+                  "additionalProperties": false,
+                  "description": "# e.g:\n# podSelector:\n#   label: access\n#",
+                  "required": [],
+                  "title": "podSelector",
+                  "type": "object"
+                }
+              },
+              "required": [
+                "enabled",
+                "namespaceSelector",
+                "podSelector",
+                "customRules"
+              ],
+              "title": "primaryAccessOnlyFrom",
+              "type": "object"
+            },
+            "readReplicasAccessOnlyFrom": {
+              "additionalProperties": false,
+              "description": "#\n#\n#\n#\n#",
+              "properties": {
+                "customRules": {
+                  "additionalProperties": false,
+                  "description": "# custom ingress rules\n# e.g:\n# CustomRules:\n#   - from:\n#       - namespaceSelector:\n#           matchLabels:\n#             label: example\n#",
+                  "required": [],
+                  "title": "customRules",
+                  "type": "object"
+                },
+                "enabled": {
+                  "default": false,
+                  "required": [],
+                  "title": "enabled",
+                  "type": "boolean"
+                },
+                "namespaceSelector": {
+                  "additionalProperties": false,
+                  "description": "# e.g:\n# namespaceSelector:\n#   label: ingress\n#",
+                  "required": [],
+                  "title": "namespaceSelector",
+                  "type": "object"
+                },
+                "podSelector": {
+                  "additionalProperties": false,
+                  "description": "# e.g:\n# podSelector:\n#   label: access\n#",
+                  "required": [],
+                  "title": "podSelector",
+                  "type": "object"
+                }
+              },
+              "required": [
+                "enabled",
+                "namespaceSelector",
+                "podSelector",
+                "customRules"
+              ],
+              "title": "readReplicasAccessOnlyFrom",
+              "type": "object"
+            }
+          },
+          "required": [
+            "primaryAccessOnlyFrom",
+            "readReplicasAccessOnlyFrom"
+          ],
+          "title": "ingressRules",
+          "type": "object"
+        },
+        "metrics": {
+          "additionalProperties": false,
+          "description": "#\n#\n#\n#",
+          "properties": {
+            "enabled": {
+              "default": false,
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "namespaceSelector": {
+              "additionalProperties": false,
+              "description": "# e.g:\n# namespaceSelector:\n#   label: monitoring\n#",
+              "required": [],
+              "title": "namespaceSelector",
+              "type": "object"
+            },
+            "podSelector": {
+              "additionalProperties": false,
+              "description": "# e.g:\n# podSelector:\n#   label: monitoring\n#",
+              "required": [],
+              "title": "podSelector",
+              "type": "object"
+            }
+          },
+          "required": [
+            "enabled",
+            "namespaceSelector",
+            "podSelector"
+          ],
+          "title": "metrics",
+          "type": "object"
+        }
+      },
+      "required": [
+        "enabled",
+        "metrics",
+        "ingressRules",
+        "egressRules"
+      ],
+      "title": "networkPolicy",
+      "type": "object"
+    },
+    "postgresqlDataDir": {
+      "default": "/bitnami/postgresql/data",
+      "description": "#\n#",
+      "required": [],
+      "title": "postgresqlDataDir",
+      "type": "string"
+    },
+    "postgresqlSharedPreloadLibraries": {
+      "default": "pgaudit",
+      "description": "#\n#",
+      "required": [],
+      "title": "postgresqlSharedPreloadLibraries",
+      "type": "string"
+    },
+    "primary": {
+      "additionalProperties": false,
+      "description": "#\n#",
+      "properties": {
+        "affinity": {
+          "additionalProperties": false,
+          "description": "#\n# ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity\n# Note: primary.podAffinityPreset, primary.podAntiAffinityPreset, and primary.nodeAffinityPreset will be ignored when it's set\n#",
+          "required": [],
+          "title": "affinity",
+          "type": "object"
+        },
+        "annotations": {
+          "additionalProperties": false,
+          "description": "#\n#",
+          "required": [],
+          "title": "annotations",
+          "type": "object"
+        },
+        "args": {
+          "description": "#\n#",
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "args",
+          "type": "array"
+        },
+        "command": {
+          "description": "#\n#",
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "command",
+          "type": "array"
+        },
+        "configuration": {
+          "default": "",
+          "description": "#\n# ref: https://www.postgresql.org/docs/current/static/runtime-config.html\n#",
+          "required": [],
+          "title": "configuration",
+          "type": "string"
+        },
+        "containerSecurityContext": {
+          "additionalProperties": false,
+          "description": "# Container Security Context\n# ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/\n#\n#\n#",
+          "properties": {
+            "enabled": {
+              "default": true,
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "runAsUser": {
+              "default": 1001,
+              "required": [],
+              "title": "runAsUser",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "enabled",
+            "runAsUser"
+          ],
+          "title": "containerSecurityContext",
+          "type": "object"
+        },
+        "customLivenessProbe": {
+          "additionalProperties": false,
+          "description": "#\n#",
+          "required": [],
+          "title": "customLivenessProbe",
+          "type": "object"
+        },
+        "customReadinessProbe": {
+          "additionalProperties": false,
+          "description": "#\n#",
+          "required": [],
+          "title": "customReadinessProbe",
+          "type": "object"
+        },
+        "customStartupProbe": {
+          "additionalProperties": false,
+          "description": "#\n#",
+          "required": [],
+          "title": "customStartupProbe",
+          "type": "object"
+        },
+        "existingConfigmap": {
+          "default": "",
+          "description": "#\n# NOTE: `primary.configuration` and `primary.pgHbaConfiguration` will be ignored\n#",
+          "required": [],
+          "title": "existingConfigmap",
+          "type": "string"
+        },
+        "existingExtendedConfigmap": {
+          "default": "",
+          "description": "#\n# NOTE: `primary.extendedConfiguration` will be ignored\n#",
+          "required": [],
+          "title": "existingExtendedConfigmap",
+          "type": "string"
+        },
+        "extendedConfiguration": {
+          "default": "",
+          "description": "#\n# ref: https://github.com/bitnami/containers/tree/main/bitnami/postgresql#allow-settings-to-be-loaded-from-files-other-than-the-default-postgresqlconf\n#",
+          "required": [],
+          "title": "extendedConfiguration",
+          "type": "string"
+        },
+        "extraEnvVars": {
+          "description": "#\n# e.g:\n# extraEnvVars:\n#   - name: FOO\n#     value: \"bar\"\n#",
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "extraEnvVars",
+          "type": "array"
+        },
+        "extraEnvVarsCM": {
+          "default": "",
+          "description": "#\n#",
+          "required": [],
+          "title": "extraEnvVarsCM",
+          "type": "string"
+        },
+        "extraEnvVarsSecret": {
+          "default": "",
+          "description": "#\n#",
+          "required": [],
+          "title": "extraEnvVarsSecret",
+          "type": "string"
+        },
+        "extraPodSpec": {
+          "additionalProperties": false,
+          "description": "#\n#",
+          "required": [],
+          "title": "extraPodSpec",
+          "type": "object"
+        },
+        "extraVolumeMounts": {
+          "description": "#\n#",
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "extraVolumeMounts",
+          "type": "array"
+        },
+        "extraVolumes": {
+          "description": "#\n#",
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "extraVolumes",
+          "type": "array"
+        },
+        "hostAliases": {
+          "description": "#\n# https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/\n#",
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "hostAliases",
+          "type": "array"
+        },
+        "hostIPC": {
+          "default": false,
+          "description": "#\n#",
+          "required": [],
+          "title": "hostIPC",
+          "type": "boolean"
+        },
+        "hostNetwork": {
+          "default": false,
+          "description": "#\n#",
+          "required": [],
+          "title": "hostNetwork",
+          "type": "boolean"
+        },
+        "initContainers": {
+          "description": "#\n# Example\n#\n# initContainers:\n#   - name: do-something\n#     image: busybox\n#     command: ['do', 'something']\n#",
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "initContainers",
+          "type": "array"
+        },
+        "initdb": {
+          "additionalProperties": false,
+          "description": "# Initdb configuration\n# ref: https://github.com/bitnami/containers/tree/main/bitnami/postgresql#specifying-initdb-arguments\n#",
+          "properties": {
+            "args": {
+              "default": "",
+              "description": "#\n#",
+              "required": [],
+              "title": "args",
+              "type": "string"
+            },
+            "password": {
+              "default": "",
+              "description": "#\n#",
+              "required": [],
+              "title": "password",
+              "type": "string"
+            },
+            "postgresqlWalDir": {
+              "default": "",
+              "description": "#\n#",
+              "required": [],
+              "title": "postgresqlWalDir",
+              "type": "string"
+            },
+            "scripts": {
+              "additionalProperties": false,
+              "description": "#\n# Specify dictionary of scripts to be run at first boot\n# e.g:\n# scripts:\n#   my_init_script.sh: |\n#      #!/bin/sh\n#      echo \"Do something.\"\n#",
+              "required": [],
+              "title": "scripts",
+              "type": "object"
+            },
+            "scriptsConfigMap": {
+              "default": "",
+              "description": "#\n# NOTE: This will override `primary.initdb.scripts`\n#",
+              "required": [],
+              "title": "scriptsConfigMap",
+              "type": "string"
+            },
+            "scriptsSecret": {
+              "default": "",
+              "description": "#\n# NOTE: This can work along `primary.initdb.scripts` or `primary.initdb.scriptsConfigMap`\n#",
+              "required": [],
+              "title": "scriptsSecret",
+              "type": "string"
+            },
+            "user": {
+              "default": "",
+              "description": "#\n#",
+              "required": [],
+              "title": "user",
+              "type": "string"
+            }
+          },
+          "required": [
+            "args",
+            "postgresqlWalDir",
+            "scripts",
+            "scriptsConfigMap",
+            "scriptsSecret",
+            "user",
+            "password"
+          ],
+          "title": "initdb",
+          "type": "object"
+        },
+        "labels": {
+          "additionalProperties": false,
+          "description": "#\n#",
+          "required": [],
+          "title": "labels",
+          "type": "object"
+        },
+        "lifecycleHooks": {
+          "additionalProperties": false,
+          "description": "#\n#",
+          "required": [],
+          "title": "lifecycleHooks",
+          "type": "object"
+        },
+        "livenessProbe": {
+          "additionalProperties": false,
+          "description": "# Configure extra options for PostgreSQL Primary containers' liveness, readiness and startup probes\n# ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes\n#\n#\n#\n#\n#\n#\n#",
+          "properties": {
+            "enabled": {
+              "default": true,
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "failureThreshold": {
+              "default": 6,
+              "required": [],
+              "title": "failureThreshold",
+              "type": "integer"
+            },
+            "initialDelaySeconds": {
+              "default": 30,
+              "required": [],
+              "title": "initialDelaySeconds",
+              "type": "integer"
+            },
+            "periodSeconds": {
+              "default": 10,
+              "required": [],
+              "title": "periodSeconds",
+              "type": "integer"
+            },
+            "successThreshold": {
+              "default": 1,
+              "required": [],
+              "title": "successThreshold",
+              "type": "integer"
+            },
+            "timeoutSeconds": {
+              "default": 5,
+              "required": [],
+              "title": "timeoutSeconds",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "enabled",
+            "initialDelaySeconds",
+            "periodSeconds",
+            "timeoutSeconds",
+            "failureThreshold",
+            "successThreshold"
+          ],
+          "title": "livenessProbe",
+          "type": "object"
+        },
+        "name": {
+          "default": "primary",
+          "description": "#\n#",
+          "required": [],
+          "title": "name",
+          "type": "string"
+        },
+        "nodeAffinityPreset": {
+          "additionalProperties": false,
+          "description": "# PostgreSQL Primary node affinity preset\n# ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity\n#",
+          "properties": {
+            "key": {
+              "default": "",
+              "description": "#\n# E.g.\n# key: \"kubernetes.io/e2e-az-name\"\n#",
+              "required": [],
+              "title": "key",
+              "type": "string"
+            },
+            "type": {
+              "default": "",
+              "description": "#\n#",
+              "required": [],
+              "title": "type",
+              "type": "string"
+            },
+            "values": {
+              "description": "#\n# E.g.\n# values:\n#   - e2e-az1\n#   - e2e-az2\n#",
+              "items": {
+                "required": []
+              },
+              "required": [],
+              "title": "values",
+              "type": "array"
+            }
+          },
+          "required": [
+            "type",
+            "key",
+            "values"
+          ],
+          "title": "nodeAffinityPreset",
+          "type": "object"
+        },
+        "nodeSelector": {
+          "additionalProperties": false,
+          "description": "#\n# ref: https://kubernetes.io/docs/user-guide/node-selection/\n#",
+          "required": [],
+          "title": "nodeSelector",
+          "type": "object"
+        },
+        "persistence": {
+          "additionalProperties": false,
+          "description": "# PostgreSQL Primary persistence configuration\n#",
+          "properties": {
+            "accessModes": {
+              "description": "#\n#",
+              "items": {
+                "anyOf": [
+                  {
+                    "required": [],
+                    "type": "string"
+                  }
+                ],
+                "required": []
+              },
+              "required": [],
+              "title": "accessModes",
+              "type": "array"
+            },
+            "annotations": {
+              "additionalProperties": false,
+              "description": "#\n#",
+              "required": [],
+              "title": "annotations",
+              "type": "object"
+            },
+            "dataSource": {
+              "additionalProperties": false,
+              "description": "#\n#",
+              "required": [],
+              "title": "dataSource",
+              "type": "object"
+            },
+            "enabled": {
+              "default": true,
+              "description": "#\n#",
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "existingClaim": {
+              "default": "",
+              "description": "#\n#",
+              "required": [],
+              "title": "existingClaim",
+              "type": "string"
+            },
+            "labels": {
+              "additionalProperties": false,
+              "description": "#\n#",
+              "required": [],
+              "title": "labels",
+              "type": "object"
+            },
+            "mountPath": {
+              "default": "/bitnami/postgresql",
+              "description": "#\n# Note: useful when using custom PostgreSQL images\n#",
+              "required": [],
+              "title": "mountPath",
+              "type": "string"
+            },
+            "selector": {
+              "additionalProperties": false,
+              "description": "#\n# selector:\n#   matchLabels:\n#     app: my-app\n#",
+              "required": [],
+              "title": "selector",
+              "type": "object"
+            },
+            "size": {
+              "default": "8Gi",
+              "description": "#\n#",
+              "required": [],
+              "title": "size",
+              "type": "string"
+            },
+            "storageClass": {
+              "default": "",
+              "description": "#\n# If defined, storageClassName: \u003cstorageClass\u003e\n# If set to \"-\", storageClassName: \"\", which disables dynamic provisioning\n# If undefined (the default) or set to null, no storageClassName spec is\n#   set, choosing the default provisioner.  (gp2 on AWS, standard on\n#   GKE, AWS \u0026 OpenStack)\n#",
+              "required": [],
+              "title": "storageClass",
+              "type": "string"
+            },
+            "subPath": {
+              "default": "",
+              "description": "#\n# Useful in dev environments and one PV for multiple services\n#",
+              "required": [],
+              "title": "subPath",
+              "type": "string"
+            }
+          },
+          "required": [
+            "enabled",
+            "existingClaim",
+            "mountPath",
+            "subPath",
+            "storageClass",
+            "accessModes",
+            "size",
+            "annotations",
+            "labels",
+            "selector",
+            "dataSource"
+          ],
+          "title": "persistence",
+          "type": "object"
+        },
+        "pgHbaConfiguration": {
+          "default": "",
+          "description": "#\n# ref: https://www.postgresql.org/docs/current/static/auth-pg-hba-conf.html\n# e.g:#\n# pgHbaConfiguration: |-\n#   local all all trust\n#   host all all localhost trust\n#   host mydatabase mysuser 192.168.0.0/24 md5\n#",
+          "required": [],
+          "title": "pgHbaConfiguration",
+          "type": "string"
+        },
+        "podAffinityPreset": {
+          "default": "",
+          "description": "#\n# ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity\n#",
+          "required": [],
+          "title": "podAffinityPreset",
+          "type": "string"
+        },
+        "podAnnotations": {
+          "additionalProperties": false,
+          "description": "#\n#",
+          "required": [],
+          "title": "podAnnotations",
+          "type": "object"
+        },
+        "podAntiAffinityPreset": {
+          "default": "soft",
+          "description": "#\n# ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity\n#",
+          "required": [],
+          "title": "podAntiAffinityPreset",
+          "type": "string"
+        },
+        "podLabels": {
+          "additionalProperties": false,
+          "description": "#\n#",
+          "required": [],
+          "title": "podLabels",
+          "type": "object"
+        },
+        "podSecurityContext": {
+          "additionalProperties": false,
+          "description": "# Pod Security Context\n# ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/\n#\n#\n#",
+          "properties": {
+            "enabled": {
+              "default": true,
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "fsGroup": {
+              "default": 1001,
+              "required": [],
+              "title": "fsGroup",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "enabled",
+            "fsGroup"
+          ],
+          "title": "podSecurityContext",
+          "type": "object"
+        },
+        "priorityClassName": {
+          "default": "",
+          "description": "#\n#",
+          "required": [],
+          "title": "priorityClassName",
+          "type": "string"
+        },
+        "readinessProbe": {
+          "additionalProperties": false,
+          "description": "#\n#\n#\n#\n#\n#\n#",
+          "properties": {
+            "enabled": {
+              "default": true,
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "failureThreshold": {
+              "default": 6,
+              "required": [],
+              "title": "failureThreshold",
+              "type": "integer"
+            },
+            "initialDelaySeconds": {
+              "default": 5,
+              "required": [],
+              "title": "initialDelaySeconds",
+              "type": "integer"
+            },
+            "periodSeconds": {
+              "default": 10,
+              "required": [],
+              "title": "periodSeconds",
+              "type": "integer"
+            },
+            "successThreshold": {
+              "default": 1,
+              "required": [],
+              "title": "successThreshold",
+              "type": "integer"
+            },
+            "timeoutSeconds": {
+              "default": 5,
+              "required": [],
+              "title": "timeoutSeconds",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "enabled",
+            "initialDelaySeconds",
+            "periodSeconds",
+            "timeoutSeconds",
+            "failureThreshold",
+            "successThreshold"
+          ],
+          "title": "readinessProbe",
+          "type": "object"
+        },
+        "resources": {
+          "additionalProperties": false,
+          "description": "# PostgreSQL Primary resource requests and limits\n# ref: https://kubernetes.io/docs/user-guide/compute-resources/\n#\n#\n#\n#",
+          "properties": {
+            "limits": {
+              "additionalProperties": false,
+              "required": [],
+              "title": "limits",
+              "type": "object"
+            },
+            "requests": {
+              "additionalProperties": false,
+              "properties": {
+                "cpu": {
+                  "default": "250m",
+                  "required": [],
+                  "title": "cpu",
+                  "type": "string"
+                },
+                "memory": {
+                  "default": "256Mi",
+                  "required": [],
+                  "title": "memory",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "memory",
+                "cpu"
+              ],
+              "title": "requests",
+              "type": "object"
+            }
+          },
+          "required": [
+            "limits",
+            "requests"
+          ],
+          "title": "resources",
+          "type": "object"
+        },
+        "schedulerName": {
+          "default": "",
+          "description": "#\n# ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/\n#",
+          "required": [],
+          "title": "schedulerName",
+          "type": "string"
+        },
+        "service": {
+          "additionalProperties": false,
+          "description": "# PostgreSQL Primary service configuration\n#",
+          "properties": {
+            "annotations": {
+              "additionalProperties": false,
+              "description": "#\n#",
+              "required": [],
+              "title": "annotations",
+              "type": "object"
+            },
+            "clusterIP": {
+              "default": "",
+              "description": "#\n# e.g:\n# clusterIP: None\n#",
+              "required": [],
+              "title": "clusterIP",
+              "type": "string"
+            },
+            "externalTrafficPolicy": {
+              "default": "Cluster",
+              "description": "#\n# ref https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip\n#",
+              "required": [],
+              "title": "externalTrafficPolicy",
+              "type": "string"
+            },
+            "extraPorts": {
+              "description": "#\n#",
+              "items": {
+                "required": []
+              },
+              "required": [],
+              "title": "extraPorts",
+              "type": "array"
+            },
+            "headless": {
+              "additionalProperties": false,
+              "description": "# Headless service properties\n#",
+              "properties": {
+                "annotations": {
+                  "additionalProperties": false,
+                  "description": "#\n#",
+                  "required": [],
+                  "title": "annotations",
+                  "type": "object"
+                }
+              },
+              "required": [
+                "annotations"
+              ],
+              "title": "headless",
+              "type": "object"
+            },
+            "loadBalancerIP": {
+              "default": "",
+              "description": "#\n# Set the LoadBalancer service type to internal only\n# ref: https://kubernetes.io/docs/concepts/services-networking/service/#internal-load-balancer\n#",
+              "required": [],
+              "title": "loadBalancerIP",
+              "type": "string"
+            },
+            "loadBalancerSourceRanges": {
+              "description": "#\n# https://kubernetes.io/docs/tasks/access-application-cluster/configure-cloud-provider-firewall/#restrict-access-for-loadbalancer-service\n#\n# loadBalancerSourceRanges:\n# - 10.10.10.0/24\n#",
+              "items": {
+                "required": []
+              },
+              "required": [],
+              "title": "loadBalancerSourceRanges",
+              "type": "array"
+            },
+            "nodePorts": {
+              "additionalProperties": false,
+              "description": "# Node ports to expose\n# NOTE: choose port between \u003c30000-32767\u003e\n#\n# ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport\n#",
+              "properties": {
+                "postgresql": {
+                  "default": "",
+                  "required": [],
+                  "title": "postgresql",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "postgresql"
+              ],
+              "title": "nodePorts",
+              "type": "object"
+            },
+            "ports": {
+              "additionalProperties": false,
+              "description": "#\n#",
+              "properties": {
+                "postgresql": {
+                  "default": 5432,
+                  "required": [],
+                  "title": "postgresql",
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "postgresql"
+              ],
+              "title": "ports",
+              "type": "object"
+            },
+            "sessionAffinity": {
+              "default": "None",
+              "description": "#\n# If \"ClientIP\", consecutive client requests will be directed to the same Pod\n# ref: https://kubernetes.io/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies\n#",
+              "required": [],
+              "title": "sessionAffinity",
+              "type": "string"
+            },
+            "sessionAffinityConfig": {
+              "additionalProperties": false,
+              "description": "#\n# sessionAffinityConfig:\n#   clientIP:\n#     timeoutSeconds: 300\n#",
+              "required": [],
+              "title": "sessionAffinityConfig",
+              "type": "object"
+            },
+            "type": {
+              "default": "ClusterIP",
+              "description": "#\n#",
+              "required": [],
+              "title": "type",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "ports",
+            "nodePorts",
+            "clusterIP",
+            "annotations",
+            "loadBalancerIP",
+            "externalTrafficPolicy",
+            "loadBalancerSourceRanges",
+            "extraPorts",
+            "sessionAffinity",
+            "sessionAffinityConfig",
+            "headless"
+          ],
+          "title": "service",
+          "type": "object"
+        },
+        "sidecars": {
+          "description": "#\n# For example:\n# sidecars:\n#   - name: your-image-name\n#     image: your-image\n#     imagePullPolicy: Always\n#     ports:\n#       - name: portname\n#         containerPort: 1234\n#",
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "sidecars",
+          "type": "array"
+        },
+        "standby": {
+          "additionalProperties": false,
+          "description": "# Configure current cluster's primary server to be the standby server in other cluster.\n# This will allow cross cluster replication and provide cross cluster high availability.\n# You will need to configure pgHbaConfiguration if you want to enable this feature with local cluster replication enabled.\n#\n#\n#\n#",
+          "properties": {
+            "enabled": {
+              "default": false,
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "primaryHost": {
+              "default": "",
+              "required": [],
+              "title": "primaryHost",
+              "type": "string"
+            },
+            "primaryPort": {
+              "default": "",
+              "required": [],
+              "title": "primaryPort",
+              "type": "string"
+            }
+          },
+          "required": [
+            "enabled",
+            "primaryHost",
+            "primaryPort"
+          ],
+          "title": "standby",
+          "type": "object"
+        },
+        "startupProbe": {
+          "additionalProperties": false,
+          "description": "#\n#\n#\n#\n#\n#\n#",
+          "properties": {
+            "enabled": {
+              "default": false,
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "failureThreshold": {
+              "default": 15,
+              "required": [],
+              "title": "failureThreshold",
+              "type": "integer"
+            },
+            "initialDelaySeconds": {
+              "default": 30,
+              "required": [],
+              "title": "initialDelaySeconds",
+              "type": "integer"
+            },
+            "periodSeconds": {
+              "default": 10,
+              "required": [],
+              "title": "periodSeconds",
+              "type": "integer"
+            },
+            "successThreshold": {
+              "default": 1,
+              "required": [],
+              "title": "successThreshold",
+              "type": "integer"
+            },
+            "timeoutSeconds": {
+              "default": 1,
+              "required": [],
+              "title": "timeoutSeconds",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "enabled",
+            "initialDelaySeconds",
+            "periodSeconds",
+            "timeoutSeconds",
+            "failureThreshold",
+            "successThreshold"
+          ],
+          "title": "startupProbe",
+          "type": "object"
+        },
+        "terminationGracePeriodSeconds": {
+          "default": "",
+          "description": "#\n# ref: https://kubernetes.io/docs/concepts/workloads/pods/pod/#termination-of-pods\n#",
+          "required": [],
+          "title": "terminationGracePeriodSeconds",
+          "type": "string"
+        },
+        "tolerations": {
+          "description": "#\n# ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/\n#",
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "tolerations",
+          "type": "array"
+        },
+        "topologySpreadConstraints": {
+          "description": "#\n# Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/#spread-constraints-for-pods\n#",
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "topologySpreadConstraints",
+          "type": "array"
+        },
+        "updateStrategy": {
+          "additionalProperties": false,
+          "description": "#\n#\n# ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#update-strategies\n#",
+          "properties": {
+            "rollingUpdate": {
+              "additionalProperties": false,
+              "required": [],
+              "title": "rollingUpdate",
+              "type": "object"
+            },
+            "type": {
+              "default": "RollingUpdate",
+              "required": [],
+              "title": "type",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "rollingUpdate"
+          ],
+          "title": "updateStrategy",
+          "type": "object"
+        }
+      },
+      "required": [
+        "name",
+        "configuration",
+        "pgHbaConfiguration",
+        "existingConfigmap",
+        "extendedConfiguration",
+        "existingExtendedConfigmap",
+        "initdb",
+        "standby",
+        "extraEnvVars",
+        "extraEnvVarsCM",
+        "extraEnvVarsSecret",
+        "command",
+        "args",
+        "livenessProbe",
+        "readinessProbe",
+        "startupProbe",
+        "customLivenessProbe",
+        "customReadinessProbe",
+        "customStartupProbe",
+        "lifecycleHooks",
+        "resources",
+        "podSecurityContext",
+        "containerSecurityContext",
+        "hostAliases",
+        "hostNetwork",
+        "hostIPC",
+        "labels",
+        "annotations",
+        "podLabels",
+        "podAnnotations",
+        "podAffinityPreset",
+        "podAntiAffinityPreset",
+        "nodeAffinityPreset",
+        "affinity",
+        "nodeSelector",
+        "tolerations",
+        "topologySpreadConstraints",
+        "priorityClassName",
+        "schedulerName",
+        "terminationGracePeriodSeconds",
+        "updateStrategy",
+        "extraVolumeMounts",
+        "extraVolumes",
+        "sidecars",
+        "initContainers",
+        "extraPodSpec",
+        "service",
+        "persistence"
+      ],
+      "title": "primary",
+      "type": "object"
+    },
+    "psp": {
+      "additionalProperties": false,
+      "description": "# Pod Security Policy\n# ref: https://kubernetes.io/docs/concepts/policy/pod-security-policy/\n#\n#",
+      "properties": {
+        "create": {
+          "default": false,
+          "required": [],
+          "title": "create",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "create"
+      ],
+      "title": "psp",
+      "type": "object"
+    },
+    "rbac": {
+      "additionalProperties": false,
+      "description": "# Creates role for ServiceAccount\n#\n#",
+      "properties": {
+        "create": {
+          "default": false,
+          "required": [],
+          "title": "create",
+          "type": "boolean"
+        },
+        "rules": {
+          "description": "#\n# e.g:\n# rules:\n#   - apiGroups:\n#       - \"\"\n#     resources:\n#       - pods\n#     verbs:\n#       - get\n#       - list\n#",
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "rules",
+          "type": "array"
+        }
+      },
+      "required": [
+        "create",
+        "rules"
+      ],
+      "title": "rbac",
+      "type": "object"
+    },
+    "readReplicas": {
+      "additionalProperties": false,
+      "description": "#\n#",
+      "properties": {
+        "affinity": {
+          "additionalProperties": false,
+          "description": "#\n# ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity\n# Note: primary.podAffinityPreset, primary.podAntiAffinityPreset, and primary.nodeAffinityPreset will be ignored when it's set\n#",
+          "required": [],
+          "title": "affinity",
+          "type": "object"
+        },
+        "annotations": {
+          "additionalProperties": false,
+          "description": "#\n#",
+          "required": [],
+          "title": "annotations",
+          "type": "object"
+        },
+        "args": {
+          "description": "#\n#",
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "args",
+          "type": "array"
+        },
+        "command": {
+          "description": "#\n#",
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "command",
+          "type": "array"
+        },
+        "containerSecurityContext": {
+          "additionalProperties": false,
+          "description": "# Container Security Context\n# ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/\n#\n#\n#",
+          "properties": {
+            "enabled": {
+              "default": true,
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "runAsUser": {
+              "default": 1001,
+              "required": [],
+              "title": "runAsUser",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "enabled",
+            "runAsUser"
+          ],
+          "title": "containerSecurityContext",
+          "type": "object"
+        },
+        "customLivenessProbe": {
+          "additionalProperties": false,
+          "description": "#\n#",
+          "required": [],
+          "title": "customLivenessProbe",
+          "type": "object"
+        },
+        "customReadinessProbe": {
+          "additionalProperties": false,
+          "description": "#\n#",
+          "required": [],
+          "title": "customReadinessProbe",
+          "type": "object"
+        },
+        "customStartupProbe": {
+          "additionalProperties": false,
+          "description": "#\n#",
+          "required": [],
+          "title": "customStartupProbe",
+          "type": "object"
+        },
+        "extendedConfiguration": {
+          "default": "",
+          "description": "#\n# ref: https://github.com/bitnami/containers/tree/main/bitnami/postgresql#allow-settings-to-be-loaded-from-files-other-than-the-default-postgresqlconf\n#",
+          "required": [],
+          "title": "extendedConfiguration",
+          "type": "string"
+        },
+        "extraEnvVars": {
+          "description": "#\n# e.g:\n# extraEnvVars:\n#   - name: FOO\n#     value: \"bar\"\n#",
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "extraEnvVars",
+          "type": "array"
+        },
+        "extraEnvVarsCM": {
+          "default": "",
+          "description": "#\n#",
+          "required": [],
+          "title": "extraEnvVarsCM",
+          "type": "string"
+        },
+        "extraEnvVarsSecret": {
+          "default": "",
+          "description": "#\n#",
+          "required": [],
+          "title": "extraEnvVarsSecret",
+          "type": "string"
+        },
+        "extraPodSpec": {
+          "additionalProperties": false,
+          "description": "#\n#",
+          "required": [],
+          "title": "extraPodSpec",
+          "type": "object"
+        },
+        "extraVolumeMounts": {
+          "description": "#\n#",
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "extraVolumeMounts",
+          "type": "array"
+        },
+        "extraVolumes": {
+          "description": "#\n#",
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "extraVolumes",
+          "type": "array"
+        },
+        "hostAliases": {
+          "description": "#\n# https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/\n#",
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "hostAliases",
+          "type": "array"
+        },
+        "hostIPC": {
+          "default": false,
+          "description": "#\n#",
+          "required": [],
+          "title": "hostIPC",
+          "type": "boolean"
+        },
+        "hostNetwork": {
+          "default": false,
+          "description": "#\n#",
+          "required": [],
+          "title": "hostNetwork",
+          "type": "boolean"
+        },
+        "initContainers": {
+          "description": "#\n# Example\n#\n# initContainers:\n#   - name: do-something\n#     image: busybox\n#     command: ['do', 'something']\n#",
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "initContainers",
+          "type": "array"
+        },
+        "labels": {
+          "additionalProperties": false,
+          "description": "#\n#",
+          "required": [],
+          "title": "labels",
+          "type": "object"
+        },
+        "lifecycleHooks": {
+          "additionalProperties": false,
+          "description": "#\n#",
+          "required": [],
+          "title": "lifecycleHooks",
+          "type": "object"
+        },
+        "livenessProbe": {
+          "additionalProperties": false,
+          "description": "# Configure extra options for PostgreSQL read only containers' liveness, readiness and startup probes\n# ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes\n#\n#\n#\n#\n#\n#\n#",
+          "properties": {
+            "enabled": {
+              "default": true,
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "failureThreshold": {
+              "default": 6,
+              "required": [],
+              "title": "failureThreshold",
+              "type": "integer"
+            },
+            "initialDelaySeconds": {
+              "default": 30,
+              "required": [],
+              "title": "initialDelaySeconds",
+              "type": "integer"
+            },
+            "periodSeconds": {
+              "default": 10,
+              "required": [],
+              "title": "periodSeconds",
+              "type": "integer"
+            },
+            "successThreshold": {
+              "default": 1,
+              "required": [],
+              "title": "successThreshold",
+              "type": "integer"
+            },
+            "timeoutSeconds": {
+              "default": 5,
+              "required": [],
+              "title": "timeoutSeconds",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "enabled",
+            "initialDelaySeconds",
+            "periodSeconds",
+            "timeoutSeconds",
+            "failureThreshold",
+            "successThreshold"
+          ],
+          "title": "livenessProbe",
+          "type": "object"
+        },
+        "name": {
+          "default": "read",
+          "description": "#\n#",
+          "required": [],
+          "title": "name",
+          "type": "string"
+        },
+        "nodeAffinityPreset": {
+          "additionalProperties": false,
+          "description": "# PostgreSQL read only node affinity preset\n# ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity\n#",
+          "properties": {
+            "key": {
+              "default": "",
+              "description": "#\n# E.g.\n# key: \"kubernetes.io/e2e-az-name\"\n#",
+              "required": [],
+              "title": "key",
+              "type": "string"
+            },
+            "type": {
+              "default": "",
+              "description": "#\n#",
+              "required": [],
+              "title": "type",
+              "type": "string"
+            },
+            "values": {
+              "description": "#\n# E.g.\n# values:\n#   - e2e-az1\n#   - e2e-az2\n#",
+              "items": {
+                "required": []
+              },
+              "required": [],
+              "title": "values",
+              "type": "array"
+            }
+          },
+          "required": [
+            "type",
+            "key",
+            "values"
+          ],
+          "title": "nodeAffinityPreset",
+          "type": "object"
+        },
+        "nodeSelector": {
+          "additionalProperties": false,
+          "description": "#\n# ref: https://kubernetes.io/docs/user-guide/node-selection/\n#",
+          "required": [],
+          "title": "nodeSelector",
+          "type": "object"
+        },
+        "persistence": {
+          "additionalProperties": false,
+          "description": "# PostgreSQL read only persistence configuration\n#",
+          "properties": {
+            "accessModes": {
+              "description": "#\n#",
+              "items": {
+                "anyOf": [
+                  {
+                    "required": [],
+                    "type": "string"
+                  }
+                ],
+                "required": []
+              },
+              "required": [],
+              "title": "accessModes",
+              "type": "array"
+            },
+            "annotations": {
+              "additionalProperties": false,
+              "description": "#\n#",
+              "required": [],
+              "title": "annotations",
+              "type": "object"
+            },
+            "dataSource": {
+              "additionalProperties": false,
+              "description": "#\n#",
+              "required": [],
+              "title": "dataSource",
+              "type": "object"
+            },
+            "enabled": {
+              "default": true,
+              "description": "#\n#",
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "existingClaim": {
+              "default": "",
+              "description": "#\n#",
+              "required": [],
+              "title": "existingClaim",
+              "type": "string"
+            },
+            "labels": {
+              "additionalProperties": false,
+              "description": "#\n#",
+              "required": [],
+              "title": "labels",
+              "type": "object"
+            },
+            "mountPath": {
+              "default": "/bitnami/postgresql",
+              "description": "#\n# Note: useful when using custom PostgreSQL images\n#",
+              "required": [],
+              "title": "mountPath",
+              "type": "string"
+            },
+            "selector": {
+              "additionalProperties": false,
+              "description": "#\n# selector:\n#   matchLabels:\n#     app: my-app\n#",
+              "required": [],
+              "title": "selector",
+              "type": "object"
+            },
+            "size": {
+              "default": "8Gi",
+              "description": "#\n#",
+              "required": [],
+              "title": "size",
+              "type": "string"
+            },
+            "storageClass": {
+              "default": "",
+              "description": "#\n# If defined, storageClassName: \u003cstorageClass\u003e\n# If set to \"-\", storageClassName: \"\", which disables dynamic provisioning\n# If undefined (the default) or set to null, no storageClassName spec is\n#   set, choosing the default provisioner.  (gp2 on AWS, standard on\n#   GKE, AWS \u0026 OpenStack)\n#",
+              "required": [],
+              "title": "storageClass",
+              "type": "string"
+            },
+            "subPath": {
+              "default": "",
+              "description": "#\n# Useful in dev environments and one PV for multiple services\n#",
+              "required": [],
+              "title": "subPath",
+              "type": "string"
+            }
+          },
+          "required": [
+            "enabled",
+            "existingClaim",
+            "mountPath",
+            "subPath",
+            "storageClass",
+            "accessModes",
+            "size",
+            "annotations",
+            "labels",
+            "selector",
+            "dataSource"
+          ],
+          "title": "persistence",
+          "type": "object"
+        },
+        "podAffinityPreset": {
+          "default": "",
+          "description": "#\n# ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity\n#",
+          "required": [],
+          "title": "podAffinityPreset",
+          "type": "string"
+        },
+        "podAnnotations": {
+          "additionalProperties": false,
+          "description": "#\n#",
+          "required": [],
+          "title": "podAnnotations",
+          "type": "object"
+        },
+        "podAntiAffinityPreset": {
+          "default": "soft",
+          "description": "#\n# ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity\n#",
+          "required": [],
+          "title": "podAntiAffinityPreset",
+          "type": "string"
+        },
+        "podLabels": {
+          "additionalProperties": false,
+          "description": "#\n#",
+          "required": [],
+          "title": "podLabels",
+          "type": "object"
+        },
+        "podSecurityContext": {
+          "additionalProperties": false,
+          "description": "# Pod Security Context\n# ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/\n#\n#\n#",
+          "properties": {
+            "enabled": {
+              "default": true,
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "fsGroup": {
+              "default": 1001,
+              "required": [],
+              "title": "fsGroup",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "enabled",
+            "fsGroup"
+          ],
+          "title": "podSecurityContext",
+          "type": "object"
+        },
+        "priorityClassName": {
+          "default": "",
+          "description": "#\n#",
+          "required": [],
+          "title": "priorityClassName",
+          "type": "string"
+        },
+        "readinessProbe": {
+          "additionalProperties": false,
+          "description": "#\n#\n#\n#\n#\n#\n#",
+          "properties": {
+            "enabled": {
+              "default": true,
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "failureThreshold": {
+              "default": 6,
+              "required": [],
+              "title": "failureThreshold",
+              "type": "integer"
+            },
+            "initialDelaySeconds": {
+              "default": 5,
+              "required": [],
+              "title": "initialDelaySeconds",
+              "type": "integer"
+            },
+            "periodSeconds": {
+              "default": 10,
+              "required": [],
+              "title": "periodSeconds",
+              "type": "integer"
+            },
+            "successThreshold": {
+              "default": 1,
+              "required": [],
+              "title": "successThreshold",
+              "type": "integer"
+            },
+            "timeoutSeconds": {
+              "default": 5,
+              "required": [],
+              "title": "timeoutSeconds",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "enabled",
+            "initialDelaySeconds",
+            "periodSeconds",
+            "timeoutSeconds",
+            "failureThreshold",
+            "successThreshold"
+          ],
+          "title": "readinessProbe",
+          "type": "object"
+        },
+        "replicaCount": {
+          "default": 1,
+          "description": "#\n#",
+          "required": [],
+          "title": "replicaCount",
+          "type": "integer"
+        },
+        "resources": {
+          "additionalProperties": false,
+          "description": "# PostgreSQL read only resource requests and limits\n# ref: https://kubernetes.io/docs/user-guide/compute-resources/\n#\n#\n#\n#",
+          "properties": {
+            "limits": {
+              "additionalProperties": false,
+              "required": [],
+              "title": "limits",
+              "type": "object"
+            },
+            "requests": {
+              "additionalProperties": false,
+              "properties": {
+                "cpu": {
+                  "default": "250m",
+                  "required": [],
+                  "title": "cpu",
+                  "type": "string"
+                },
+                "memory": {
+                  "default": "256Mi",
+                  "required": [],
+                  "title": "memory",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "memory",
+                "cpu"
+              ],
+              "title": "requests",
+              "type": "object"
+            }
+          },
+          "required": [
+            "limits",
+            "requests"
+          ],
+          "title": "resources",
+          "type": "object"
+        },
+        "schedulerName": {
+          "default": "",
+          "description": "#\n# ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/\n#",
+          "required": [],
+          "title": "schedulerName",
+          "type": "string"
+        },
+        "service": {
+          "additionalProperties": false,
+          "description": "# PostgreSQL read only service configuration\n#",
+          "properties": {
+            "annotations": {
+              "additionalProperties": false,
+              "description": "#\n#",
+              "required": [],
+              "title": "annotations",
+              "type": "object"
+            },
+            "clusterIP": {
+              "default": "",
+              "description": "#\n# e.g:\n# clusterIP: None\n#",
+              "required": [],
+              "title": "clusterIP",
+              "type": "string"
+            },
+            "externalTrafficPolicy": {
+              "default": "Cluster",
+              "description": "#\n# ref https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip\n#",
+              "required": [],
+              "title": "externalTrafficPolicy",
+              "type": "string"
+            },
+            "extraPorts": {
+              "description": "#\n#",
+              "items": {
+                "required": []
+              },
+              "required": [],
+              "title": "extraPorts",
+              "type": "array"
+            },
+            "headless": {
+              "additionalProperties": false,
+              "description": "# Headless service properties\n#",
+              "properties": {
+                "annotations": {
+                  "additionalProperties": false,
+                  "description": "#\n#",
+                  "required": [],
+                  "title": "annotations",
+                  "type": "object"
+                }
+              },
+              "required": [
+                "annotations"
+              ],
+              "title": "headless",
+              "type": "object"
+            },
+            "loadBalancerIP": {
+              "default": "",
+              "description": "#\n# Set the LoadBalancer service type to internal only\n# ref: https://kubernetes.io/docs/concepts/services-networking/service/#internal-load-balancer\n#",
+              "required": [],
+              "title": "loadBalancerIP",
+              "type": "string"
+            },
+            "loadBalancerSourceRanges": {
+              "description": "#\n# https://kubernetes.io/docs/tasks/access-application-cluster/configure-cloud-provider-firewall/#restrict-access-for-loadbalancer-service\n#\n# loadBalancerSourceRanges:\n# - 10.10.10.0/24\n#",
+              "items": {
+                "required": []
+              },
+              "required": [],
+              "title": "loadBalancerSourceRanges",
+              "type": "array"
+            },
+            "nodePorts": {
+              "additionalProperties": false,
+              "description": "# Node ports to expose\n# NOTE: choose port between \u003c30000-32767\u003e\n#\n# ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport\n#",
+              "properties": {
+                "postgresql": {
+                  "default": "",
+                  "required": [],
+                  "title": "postgresql",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "postgresql"
+              ],
+              "title": "nodePorts",
+              "type": "object"
+            },
+            "ports": {
+              "additionalProperties": false,
+              "description": "#\n#",
+              "properties": {
+                "postgresql": {
+                  "default": 5432,
+                  "required": [],
+                  "title": "postgresql",
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "postgresql"
+              ],
+              "title": "ports",
+              "type": "object"
+            },
+            "sessionAffinity": {
+              "default": "None",
+              "description": "#\n# If \"ClientIP\", consecutive client requests will be directed to the same Pod\n# ref: https://kubernetes.io/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies\n#",
+              "required": [],
+              "title": "sessionAffinity",
+              "type": "string"
+            },
+            "sessionAffinityConfig": {
+              "additionalProperties": false,
+              "description": "#\n# sessionAffinityConfig:\n#   clientIP:\n#     timeoutSeconds: 300\n#",
+              "required": [],
+              "title": "sessionAffinityConfig",
+              "type": "object"
+            },
+            "type": {
+              "default": "ClusterIP",
+              "description": "#\n#",
+              "required": [],
+              "title": "type",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "ports",
+            "nodePorts",
+            "clusterIP",
+            "annotations",
+            "loadBalancerIP",
+            "externalTrafficPolicy",
+            "loadBalancerSourceRanges",
+            "extraPorts",
+            "sessionAffinity",
+            "sessionAffinityConfig",
+            "headless"
+          ],
+          "title": "service",
+          "type": "object"
+        },
+        "sidecars": {
+          "description": "#\n# For example:\n# sidecars:\n#   - name: your-image-name\n#     image: your-image\n#     imagePullPolicy: Always\n#     ports:\n#       - name: portname\n#         containerPort: 1234\n#",
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "sidecars",
+          "type": "array"
+        },
+        "startupProbe": {
+          "additionalProperties": false,
+          "description": "#\n#\n#\n#\n#\n#\n#",
+          "properties": {
+            "enabled": {
+              "default": false,
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "failureThreshold": {
+              "default": 15,
+              "required": [],
+              "title": "failureThreshold",
+              "type": "integer"
+            },
+            "initialDelaySeconds": {
+              "default": 30,
+              "required": [],
+              "title": "initialDelaySeconds",
+              "type": "integer"
+            },
+            "periodSeconds": {
+              "default": 10,
+              "required": [],
+              "title": "periodSeconds",
+              "type": "integer"
+            },
+            "successThreshold": {
+              "default": 1,
+              "required": [],
+              "title": "successThreshold",
+              "type": "integer"
+            },
+            "timeoutSeconds": {
+              "default": 1,
+              "required": [],
+              "title": "timeoutSeconds",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "enabled",
+            "initialDelaySeconds",
+            "periodSeconds",
+            "timeoutSeconds",
+            "failureThreshold",
+            "successThreshold"
+          ],
+          "title": "startupProbe",
+          "type": "object"
+        },
+        "terminationGracePeriodSeconds": {
+          "default": "",
+          "description": "#\n# ref: https://kubernetes.io/docs/concepts/workloads/pods/pod/#termination-of-pods\n#",
+          "required": [],
+          "title": "terminationGracePeriodSeconds",
+          "type": "string"
+        },
+        "tolerations": {
+          "description": "#\n# ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/\n#",
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "tolerations",
+          "type": "array"
+        },
+        "topologySpreadConstraints": {
+          "description": "#\n# Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/#spread-constraints-for-pods\n#",
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "topologySpreadConstraints",
+          "type": "array"
+        },
+        "updateStrategy": {
+          "additionalProperties": false,
+          "description": "#\n#\n# ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#update-strategies\n#",
+          "properties": {
+            "rollingUpdate": {
+              "additionalProperties": false,
+              "required": [],
+              "title": "rollingUpdate",
+              "type": "object"
+            },
+            "type": {
+              "default": "RollingUpdate",
+              "required": [],
+              "title": "type",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "rollingUpdate"
+          ],
+          "title": "updateStrategy",
+          "type": "object"
+        }
+      },
+      "required": [
+        "name",
+        "replicaCount",
+        "extendedConfiguration",
+        "extraEnvVars",
+        "extraEnvVarsCM",
+        "extraEnvVarsSecret",
+        "command",
+        "args",
+        "livenessProbe",
+        "readinessProbe",
+        "startupProbe",
+        "customLivenessProbe",
+        "customReadinessProbe",
+        "customStartupProbe",
+        "lifecycleHooks",
+        "resources",
+        "podSecurityContext",
+        "containerSecurityContext",
+        "hostAliases",
+        "hostNetwork",
+        "hostIPC",
+        "labels",
+        "annotations",
+        "podLabels",
+        "podAnnotations",
+        "podAffinityPreset",
+        "podAntiAffinityPreset",
+        "nodeAffinityPreset",
+        "affinity",
+        "nodeSelector",
+        "tolerations",
+        "topologySpreadConstraints",
+        "priorityClassName",
+        "schedulerName",
+        "terminationGracePeriodSeconds",
+        "updateStrategy",
+        "extraVolumeMounts",
+        "extraVolumes",
+        "sidecars",
+        "initContainers",
+        "extraPodSpec",
+        "service",
+        "persistence"
+      ],
+      "title": "readReplicas",
+      "type": "object"
+    },
+    "replication": {
+      "additionalProperties": false,
+      "description": "# Replication configuration\n# Ignored if `architecture` is `standalone`\n#",
+      "properties": {
+        "applicationName": {
+          "default": "my_application",
+          "description": "#\n#",
+          "required": [],
+          "title": "applicationName",
+          "type": "string"
+        },
+        "numSynchronousReplicas": {
+          "default": 0,
+          "required": [],
+          "title": "numSynchronousReplicas",
+          "type": "integer"
+        },
+        "synchronousCommit": {
+          "default": "off",
+          "description": "#\n#\n# ref: https://www.postgresql.org/docs/current/runtime-config-wal.html#GUC-SYNCHRONOUS-COMMIT\n#",
+          "required": [],
+          "title": "synchronousCommit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "synchronousCommit",
+        "numSynchronousReplicas",
+        "applicationName"
+      ],
+      "title": "replication",
+      "type": "object"
+    },
+    "serviceAccount": {
+      "additionalProperties": false,
+      "description": "# Service account for PostgreSQL to use.\n# ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/\n#",
+      "properties": {
+        "annotations": {
+          "additionalProperties": false,
+          "description": "#\n#",
+          "required": [],
+          "title": "annotations",
+          "type": "object"
+        },
+        "automountServiceAccountToken": {
+          "default": true,
+          "description": "#\n# Can be set to false if pods using this serviceAccount do not need to use K8s API\n#",
+          "required": [],
+          "title": "automountServiceAccountToken",
+          "type": "boolean"
+        },
+        "create": {
+          "default": false,
+          "description": "#\n#",
+          "required": [],
+          "title": "create",
+          "type": "boolean"
+        },
+        "name": {
+          "default": "",
+          "description": "#\n# If not set and create is true, a name is generated using the common.names.fullname template\n#",
+          "required": [],
+          "title": "name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "create",
+        "name",
+        "automountServiceAccountToken",
+        "annotations"
+      ],
+      "title": "serviceAccount",
+      "type": "object"
+    },
+    "serviceBindings": {
+      "additionalProperties": false,
+      "description": "#\n# Ref: https://servicebinding.io/service-provider/\n#",
       "properties": {
         "enabled": {
-          "type": "boolean",
-          "title": "Configure metrics exporter",
-          "form": true
+          "default": false,
+          "required": [],
+          "title": "enabled",
+          "type": "boolean"
         }
-      }
+      },
+      "required": [
+        "enabled"
+      ],
+      "title": "serviceBindings",
+      "type": "object"
+    },
+    "shmVolume": {
+      "additionalProperties": false,
+      "description": "# Start PostgreSQL pod(s) without limitations on shm memory.\n# By default docker and containerd (and possibly other container runtimes) limit `/dev/shm` to `64M`\n# ref: https://github.com/docker-library/postgres/issues/416\n# ref: https://github.com/containerd/containerd/issues/3654\n#",
+      "properties": {
+        "enabled": {
+          "default": true,
+          "description": "#\n#",
+          "required": [],
+          "title": "enabled",
+          "type": "boolean"
+        },
+        "sizeLimit": {
+          "default": "",
+          "description": "#\n# Note: the size of the tmpfs counts against container's memory limit\n# e.g:\n# sizeLimit: 1Gi\n#",
+          "required": [],
+          "title": "sizeLimit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "enabled",
+        "sizeLimit"
+      ],
+      "title": "shmVolume",
+      "type": "object"
+    },
+    "tls": {
+      "additionalProperties": false,
+      "description": "# TLS configuration\n#",
+      "properties": {
+        "autoGenerated": {
+          "default": false,
+          "description": "#\n#",
+          "required": [],
+          "title": "autoGenerated",
+          "type": "boolean"
+        },
+        "certCAFilename": {
+          "default": "",
+          "description": "#\n# If provided, PostgreSQL will authenticate TLS/SSL clients by requesting them a certificate\n# ref: https://www.postgresql.org/docs/9.6/auth-methods.html\n#",
+          "required": [],
+          "title": "certCAFilename",
+          "type": "string"
+        },
+        "certFilename": {
+          "default": "",
+          "description": "#\n#",
+          "required": [],
+          "title": "certFilename",
+          "type": "string"
+        },
+        "certKeyFilename": {
+          "default": "",
+          "description": "#\n#",
+          "required": [],
+          "title": "certKeyFilename",
+          "type": "string"
+        },
+        "certificatesSecret": {
+          "default": "",
+          "description": "#\n#",
+          "required": [],
+          "title": "certificatesSecret",
+          "type": "string"
+        },
+        "crlFilename": {
+          "default": "",
+          "description": "#\n#",
+          "required": [],
+          "title": "crlFilename",
+          "type": "string"
+        },
+        "enabled": {
+          "default": false,
+          "description": "#\n#",
+          "required": [],
+          "title": "enabled",
+          "type": "boolean"
+        },
+        "preferServerCiphers": {
+          "default": true,
+          "description": "#\n#",
+          "required": [],
+          "title": "preferServerCiphers",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "enabled",
+        "autoGenerated",
+        "preferServerCiphers",
+        "certificatesSecret",
+        "certFilename",
+        "certKeyFilename",
+        "certCAFilename",
+        "crlFilename"
+      ],
+      "title": "tls",
+      "type": "object"
+    },
+    "volumePermissions": {
+      "additionalProperties": false,
+      "description": "# Init containers parameters:\n# volumePermissions: Change the owner and group of the persistent volume(s) mountpoint(s) to 'runAsUser:fsGroup' on each node\n#",
+      "properties": {
+        "containerSecurityContext": {
+          "additionalProperties": false,
+          "description": "# Init container' Security Context\n# Note: the chown of the data folder is done to containerSecurityContext.runAsUser\n# and not the below volumePermissions.containerSecurityContext.runAsUser\n#\n#",
+          "properties": {
+            "runAsUser": {
+              "default": 0,
+              "required": [],
+              "title": "runAsUser",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "runAsUser"
+          ],
+          "title": "containerSecurityContext",
+          "type": "object"
+        },
+        "enabled": {
+          "default": false,
+          "description": "#\n#",
+          "required": [],
+          "title": "enabled",
+          "type": "boolean"
+        },
+        "image": {
+          "additionalProperties": false,
+          "description": "#\n#\n#\n#\n#\n#\n#",
+          "properties": {
+            "digest": {
+              "default": "",
+              "required": [],
+              "title": "digest",
+              "type": "string"
+            },
+            "pullPolicy": {
+              "default": "IfNotPresent",
+              "required": [],
+              "title": "pullPolicy",
+              "type": "string"
+            },
+            "pullSecrets": {
+              "description": "# Optionally specify an array of imagePullSecrets.\n# Secrets must be manually created in the namespace.\n# ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/\n# Example:\n# pullSecrets:\n#   - myRegistryKeySecretName\n#",
+              "items": {
+                "required": []
+              },
+              "required": [],
+              "title": "pullSecrets",
+              "type": "array"
+            },
+            "registry": {
+              "default": "docker.io",
+              "required": [],
+              "title": "registry",
+              "type": "string"
+            },
+            "repository": {
+              "default": "bitnami/bitnami-shell",
+              "required": [],
+              "title": "repository",
+              "type": "string"
+            },
+            "tag": {
+              "default": "11-debian-11-r86",
+              "required": [],
+              "title": "tag",
+              "type": "string"
+            }
+          },
+          "required": [
+            "registry",
+            "repository",
+            "tag",
+            "digest",
+            "pullPolicy",
+            "pullSecrets"
+          ],
+          "title": "image",
+          "type": "object"
+        },
+        "resources": {
+          "additionalProperties": false,
+          "description": "# Init container resource requests and limits\n# ref: https://kubernetes.io/docs/user-guide/compute-resources/\n#\n#\n#",
+          "properties": {
+            "limits": {
+              "additionalProperties": false,
+              "required": [],
+              "title": "limits",
+              "type": "object"
+            },
+            "requests": {
+              "additionalProperties": false,
+              "required": [],
+              "title": "requests",
+              "type": "object"
+            }
+          },
+          "required": [
+            "limits",
+            "requests"
+          ],
+          "title": "resources",
+          "type": "object"
+        }
+      },
+      "required": [
+        "enabled",
+        "image",
+        "resources",
+        "containerSecurityContext"
+      ],
+      "title": "volumePermissions",
+      "type": "object"
     }
-  }
+  },
+  "required": [
+    "global",
+    "kubeVersion",
+    "nameOverride",
+    "fullnameOverride",
+    "clusterDomain",
+    "extraDeploy",
+    "commonLabels",
+    "commonAnnotations",
+    "diagnosticMode",
+    "image",
+    "auth",
+    "architecture",
+    "replication",
+    "containerPorts",
+    "audit",
+    "ldap",
+    "postgresqlDataDir",
+    "postgresqlSharedPreloadLibraries",
+    "shmVolume",
+    "tls",
+    "primary",
+    "readReplicas",
+    "networkPolicy",
+    "volumePermissions",
+    "serviceBindings",
+    "serviceAccount",
+    "rbac",
+    "psp",
+    "metrics"
+  ],
+  "type": "object"
 }
