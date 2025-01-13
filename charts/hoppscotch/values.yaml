@@ -5,7 +5,7 @@
 nameOverride: ""
 fullnameOverride: ""
 
-# -- Postgresql Database configuration. We do not recommend to use this configuration for production environment.
+# Postgresql Database configuration. We do not recommend to use this configuration for production environment.
 postgresql:
   # @schema
   # type: bool
@@ -22,6 +22,8 @@ postgresql:
     username: hoppscotch
     password: hoppscotch
     database: hoppscotch
+
+  # -- Instance configurations, resources, affinity, persistence and others.
   primary:
     resources: {}
     affinity: {}
@@ -34,8 +36,7 @@ postgresql:
       annotations: {}
       labels: {}
 
-# External Database configuration
-# Configure the database for production environment.
+# -- External Database configuration, Configure the database for production environment.
 database:
   enabled: false
   username: hoppscotch
@@ -46,12 +47,13 @@ database:
 
 # Parameters configuration
 parameters:
-  # Security
+  # -- Security
   security:
     jwtSecret: ""
     sessionSecret: ""
     dataEncryptionKey: "" # 32 charsets
-  # Configs
+  
+  # -- Configs
   config:
     refreshTokenValidity: "604800000"
     accessTokenValidity: "86400000"
@@ -60,7 +62,8 @@ parameters:
     rateLimit:
       ttl: 60 # In seconds
       max: 100 # Max requests per IP
-  # Auth Providers
+  
+  # -- Auth Providers
   auth:
     github:
       enabled: false
@@ -77,6 +80,8 @@ parameters:
       clientId: ""
       clientSecret: ""
       scope: user:email
+  
+  # -- SMTP configurations
   smtp:
     enabled: false
     mailFrom: "<no_reply@example.com>"
@@ -87,29 +92,32 @@ parameters:
     username: ""
     password: ""
 
-# Parameters secrets (exists) configuration
-# In case that you already has the secret configured.
+# -- Parameters secrets (exists) configuration. In case that you already has the secret configured.
 parametersSecretName: ""
 
 # Backend configuration
 backend:
+  # -- Number of replicas for the backend
   replicaCount: 1
 
+  # -- The image and tag used by backend
   image:
     repository: hoppscotch/hoppscotch-backend
     tag: 2024.12.0
     pullPolicy: IfNotPresent
 
-  # extra_labels:
+  # -- Extra labels used by backend
+  extra_labels: {}
   #   app: "postwoman"
   #   env: "staging"
 
-  # Service configuration
+  # -- Service configuration
   service:
     type: ClusterIP
     port: 80
     containerPort: 3170
 
+  # -- Ingress configuration
   ingress:
     enabled: false
     annotations: {}

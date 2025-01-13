@@ -49,34 +49,22 @@ A free, fast and beautiful API request builder
 | backend.affinity | object | `{}` |  |
 | backend.customVolume | object | `{}` |  |
 | backend.customVolumeMount | object | `{}` |  |
-| backend.image.pullPolicy | string | `"IfNotPresent"` |  |
-| backend.image.repository | string | `"hoppscotch/hoppscotch-backend"` |  |
-| backend.image.tag | string | `"2024.12.0"` |  |
-| backend.ingress.annotations | object | `{}` |  |
-| backend.ingress.enabled | bool | `false` |  |
-| backend.ingress.hosts[0].host | string | `"chart-example.local"` |  |
-| backend.ingress.hosts[0].paths[0] | string | `"/"` |  |
-| backend.ingress.tls | list | `[]` |  |
+| backend.extra_labels | object | `{}` | Extra labels used by backend |
+| backend.image | object | `{"pullPolicy":"IfNotPresent","repository":"hoppscotch/hoppscotch-backend","tag":"2024.12.0"}` | The image and tag used by backend |
+| backend.ingress | object | `{"annotations":{},"enabled":false,"hosts":[{"host":"chart-example.local","paths":["/"]}],"tls":[]}` | Ingress configuration |
 | backend.liveness.httpGet.path | string | `"/"` |  |
 | backend.liveness.httpGet.port | string | `"http"` |  |
 | backend.nodeSelector | object | `{}` |  |
 | backend.readiness.httpGet.path | string | `"/"` |  |
 | backend.readiness.httpGet.port | string | `"http"` |  |
-| backend.replicaCount | int | `1` |  |
+| backend.replicaCount | int | `1` | Number of replicas for the backend |
 | backend.resources.limits.cpu | string | `"100m"` |  |
 | backend.resources.limits.memory | string | `"128Mi"` |  |
 | backend.resources.requests.cpu | string | `"100m"` |  |
 | backend.resources.requests.memory | string | `"128Mi"` |  |
-| backend.service.containerPort | int | `3170` |  |
-| backend.service.port | int | `80` |  |
-| backend.service.type | string | `"ClusterIP"` |  |
+| backend.service | object | `{"containerPort":3170,"port":80,"type":"ClusterIP"}` | Service configuration |
 | backend.tolerations | list | `[]` |  |
-| database.database | string | `"hoppscotch"` |  |
-| database.enabled | bool | `false` |  |
-| database.host | string | `"127.0.0.1"` |  |
-| database.password | string | `"hoppscotch"` |  |
-| database.port | int | `5432` |  |
-| database.username | string | `"hoppscotch"` |  |
+| database | object | `{"database":"hoppscotch","enabled":false,"host":"127.0.0.1","password":"hoppscotch","port":5432,"username":"hoppscotch"}` | External Database configuration, Configure the database for production environment. |
 | frontend.affinity | object | `{}` |  |
 | frontend.customVolume | object | `{}` |  |
 | frontend.customVolumeMount | object | `{}` |  |
@@ -105,39 +93,14 @@ A free, fast and beautiful API request builder
 | frontend.tolerations | list | `[]` |  |
 | fullnameOverride | string | `""` |  |
 | nameOverride | string | `""` | the override name |
-| parameters.auth.github.clientId | string | `""` |  |
-| parameters.auth.github.clientSecret | string | `""` |  |
-| parameters.auth.github.enabled | bool | `false` |  |
-| parameters.auth.github.scope | string | `"user:email"` |  |
-| parameters.auth.google.clientId | string | `""` |  |
-| parameters.auth.google.clientSecret | string | `""` |  |
-| parameters.auth.google.enabled | bool | `false` |  |
-| parameters.auth.google.scope | string | `"user:email"` |  |
-| parameters.auth.microsoft.clientId | string | `""` |  |
-| parameters.auth.microsoft.clientSecret | string | `""` |  |
-| parameters.auth.microsoft.enabled | bool | `false` |  |
-| parameters.auth.microsoft.scope | string | `"user:email"` |  |
-| parameters.config.accessTokenValidity | string | `"86400000"` |  |
-| parameters.config.allowSecureToken | bool | `true` |  |
-| parameters.config.enableSubPath | bool | `false` |  |
-| parameters.config.rateLimit.max | int | `100` |  |
-| parameters.config.rateLimit.ttl | int | `60` |  |
-| parameters.config.refreshTokenValidity | string | `"604800000"` |  |
-| parameters.security.dataEncryptionKey | string | `""` |  |
-| parameters.security.jwtSecret | string | `""` |  |
-| parameters.security.sessionSecret | string | `""` |  |
-| parameters.smtp.enabled | bool | `false` |  |
-| parameters.smtp.host | string | `"localhost"` |  |
-| parameters.smtp.mailFrom | string | `"<no_reply@example.com>"` |  |
-| parameters.smtp.password | string | `""` |  |
-| parameters.smtp.port | int | `25` |  |
-| parameters.smtp.tlsRejectUnauthorized | bool | `false` |  |
-| parameters.smtp.tlsSecure | bool | `false` |  |
-| parameters.smtp.username | string | `""` |  |
-| parametersSecretName | string | `""` |  |
-| postgresql | object | `{"auth":{"database":"hoppscotch","password":"hoppscotch","postgresPassword":"hoppscotch","username":"hoppscotch"},"enabled":true,"primary":{"affinity":{},"nodeSelector":{},"persistence":{"annotations":{},"enabled":true,"labels":{},"size":"10Gi","storageClass":""},"resources":{},"tolerations":[]}}` | Postgresql Database configuration. We do not recommend to use this configuration for production environment. |
+| parameters.auth | object | `{"github":{"clientId":"","clientSecret":"","enabled":false,"scope":"user:email"},"google":{"clientId":"","clientSecret":"","enabled":false,"scope":"user:email"},"microsoft":{"clientId":"","clientSecret":"","enabled":false,"scope":"user:email"}}` | Auth Providers |
+| parameters.config | object | `{"accessTokenValidity":"86400000","allowSecureToken":true,"enableSubPath":false,"rateLimit":{"max":100,"ttl":60},"refreshTokenValidity":"604800000"}` | Configs |
+| parameters.security | object | `{"dataEncryptionKey":"","jwtSecret":"","sessionSecret":""}` | Security |
+| parameters.smtp | object | `{"enabled":false,"host":"localhost","mailFrom":"<no_reply@example.com>","password":"","port":25,"tlsRejectUnauthorized":false,"tlsSecure":false,"username":""}` | SMTP configurations |
+| parametersSecretName | string | `""` | Parameters secrets (exists) configuration. In case that you already has the secret configured. |
 | postgresql.auth | object | `{"database":"hoppscotch","password":"hoppscotch","postgresPassword":"hoppscotch","username":"hoppscotch"}` | Configure the authentication of the instance |
 | postgresql.enabled | bool | `true` | Enable the internal PostgreSQL installation |
+| postgresql.primary | object | `{"affinity":{},"nodeSelector":{},"persistence":{"annotations":{},"enabled":true,"labels":{},"size":"10Gi","storageClass":""},"resources":{},"tolerations":[]}` | Instance configurations, resources, affinity, persistence and others. |
 
 ----------------------------------------------
 Autogenerated from chart metadata using [helm-docs v1.14.2](https://github.com/norwoodj/helm-docs/releases/v1.14.2)
