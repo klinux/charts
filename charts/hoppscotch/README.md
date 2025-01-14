@@ -46,24 +46,19 @@ A free, fast and beautiful API request builder
 | admin.service.port | int | `80` |  |
 | admin.service.type | string | `"ClusterIP"` |  |
 | admin.tolerations | list | `[]` |  |
-| backend.affinity | object | `{}` |  |
-| backend.customVolume | object | `{}` |  |
-| backend.customVolumeMount | object | `{}` |  |
+| backend.affinity | object | `{}` | Configure app affinity: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/ |
+| backend.customVolume | object | `{}` | Configure app custom volume: https://kubernetes.io/docs/concepts/storage/volumes/ |
+| backend.customVolumeMount | object | `{}` | Configure app custom volume mounts: https://kubernetes.io/docs/tasks/configure-pod-container/configure-volume-storage/ |
 | backend.extra_labels | object | `{}` | Extra labels used by backend |
 | backend.image | object | `{"pullPolicy":"IfNotPresent","repository":"hoppscotch/hoppscotch-backend","tag":"2024.12.0"}` | The image and tag used by backend |
 | backend.ingress | object | `{"annotations":{},"enabled":false,"hosts":[{"host":"chart-example.local","paths":["/"]}],"tls":[]}` | Ingress configuration |
-| backend.liveness.httpGet.path | string | `"/"` |  |
-| backend.liveness.httpGet.port | string | `"http"` |  |
-| backend.nodeSelector | object | `{}` |  |
-| backend.readiness.httpGet.path | string | `"/"` |  |
-| backend.readiness.httpGet.port | string | `"http"` |  |
+| backend.liveness | object | `{"httpGet":{"path":"/","port":"http"}}` | Configure app liveness: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/ |
+| backend.nodeSelector | object | `{}` | Configure app node selector: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/ |
+| backend.readiness | object | `{"httpGet":{"path":"/","port":"http"}}` | Configure app readiness: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/ |
 | backend.replicaCount | int | `1` | Number of replicas for the backend |
-| backend.resources.limits.cpu | string | `"100m"` |  |
-| backend.resources.limits.memory | string | `"128Mi"` |  |
-| backend.resources.requests.cpu | string | `"100m"` |  |
-| backend.resources.requests.memory | string | `"128Mi"` |  |
+| backend.resources | object | `{"limits":{"cpu":"100m","memory":"128Mi"},"requests":{"cpu":"100m","memory":"128Mi"}}` | Configure app resources: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |
 | backend.service | object | `{"containerPort":3170,"port":80,"type":"ClusterIP"}` | Service configuration |
-| backend.tolerations | list | `[]` |  |
+| backend.tolerations | list | `[]` | Configure app tolerations: https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/ |
 | database | object | `{"database":"hoppscotch","enabled":false,"host":"127.0.0.1","password":"hoppscotch","port":5432,"username":"hoppscotch"}` | External Database configuration, Configure the database for production environment. |
 | frontend.affinity | object | `{}` |  |
 | frontend.customVolume | object | `{}` |  |

@@ -128,6 +128,7 @@ backend:
         paths: ["/"]
     tls: []
 
+  # -- Configure app resources: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
   resources:
     limits:
       cpu: 100m
@@ -136,24 +137,31 @@ backend:
       cpu: 100m
       memory: 128Mi
 
+  # -- Configure app liveness: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
   liveness:
     httpGet:
       path: /
       port: http
   
+  # -- Configure app readiness: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
   readiness:
     httpGet:
       path: /
       port: http
 
+  # -- Configure app node selector: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
   nodeSelector: {}
 
+  # -- Configure app tolerations: https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
   tolerations: []
 
+  # -- Configure app affinity: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
   affinity: {}
 
+  # -- Configure app custom volume mounts: https://kubernetes.io/docs/tasks/configure-pod-container/configure-volume-storage/
   customVolumeMount: {}
 
+  # -- Configure app custom volume: https://kubernetes.io/docs/concepts/storage/volumes/
   customVolume: {}
 
 # Frontend configuration
