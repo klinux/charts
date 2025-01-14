@@ -166,26 +166,29 @@ backend:
 
 # Frontend configuration
 frontend:
+  # -- Number of replicas for the frontend
   replicaCount: 1
 
+  # -- The image and tag used by frontend
   image:
     repository: hoppscotch/hoppscotch-frontend
     tag: 2024.12.0
     pullPolicy: IfNotPresent
 
-  # extra_labels:
+  # -- Extra labels used by frontend
+  extra_labels: {}
   #   app: "postwoman"
   #   env: "staging"
 
-  # Service configuration
+  # -- Service configuration
   service:
     type: ClusterIP
     port: 80
     containerPort: 3000
 
+  # -- Ingress configuration
   ingress:
     enabled: false
-    ingressClassName: ""
     annotations: {}
       # kubernetes.io/ingress.class: nginx
       # kubernetes.io/tls-acme: "true"
@@ -194,6 +197,7 @@ frontend:
         paths: ["/"]
     tls: []
 
+  # -- Configure app resources: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
   resources:
     limits:
       cpu: 100m
@@ -202,48 +206,58 @@ frontend:
       cpu: 100m
       memory: 128Mi
 
+  # -- Configure app liveness: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
   liveness:
     httpGet:
       path: /
       port: http
   
+  # -- Configure app readiness: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
   readiness:
     httpGet:
       path: /
       port: http
 
+  # -- Configure app node selector: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
   nodeSelector: {}
 
+  # -- Configure app tolerations: https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
   tolerations: []
 
+  # -- Configure app affinity: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
   affinity: {}
 
+  # -- Configure app custom volume mounts: https://kubernetes.io/docs/tasks/configure-pod-container/configure-volume-storage/
   customVolumeMount: {}
 
+  # -- Configure app custom volume: https://kubernetes.io/docs/concepts/storage/volumes/
   customVolume: {}
 
 # Admin configuration
 admin:
+  # -- Number of replicas for the admin
   replicaCount: 1
 
+  # -- The image and tag used by admin
   image:
     repository: hoppscotch/hoppscotch-admin
     tag: 2024.12.0
     pullPolicy: IfNotPresent
 
-  # extra_labels:
+  # -- Extra labels used by admin
+  extra_labels: {}
   #   app: "postwoman"
   #   env: "staging"
 
-  # Service configuration
+  # -- Service configuration
   service:
     type: ClusterIP
     port: 80
     containerPort: 3100
 
+  # -- Ingress configuration
   ingress:
     enabled: false
-    ingressClassName: ""
     annotations: {}
       # kubernetes.io/ingress.class: nginx
       # kubernetes.io/tls-acme: "true"
@@ -252,6 +266,7 @@ admin:
         paths: ["/"]
     tls: []
 
+  # -- Configure app resources: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
   resources:
     limits:
       cpu: 100m
@@ -260,22 +275,29 @@ admin:
       cpu: 100m
       memory: 128Mi
 
+  # -- Configure app liveness: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
   liveness:
     httpGet:
       path: /
       port: http
   
+  # -- Configure app readiness: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
   readiness:
     httpGet:
       path: /
       port: http
 
+  # -- Configure app node selector: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
   nodeSelector: {}
 
+  # -- Configure app tolerations: https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
   tolerations: []
 
+  # -- Configure app affinity: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
   affinity: {}
 
+  # -- Configure app custom volume mounts: https://kubernetes.io/docs/tasks/configure-pod-container/configure-volume-storage/
   customVolumeMount: {}
 
+  # -- Configure app custom volume: https://kubernetes.io/docs/concepts/storage/volumes/
   customVolume: {}
